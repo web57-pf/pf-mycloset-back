@@ -1,5 +1,5 @@
 
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "../enum/roles";
 import { Clothes } from "src/clothes/entities/clothes.entity";
 import { Combination } from "src/combinations/combinations.entity";
@@ -19,10 +19,10 @@ export class User {
     @Column({type: "varchar", length: 50, nullable: false})
     email: string
 
-    @Column({})
+    @Column({type: "varchar", nullable: true})
     password: string
 
-    @Column({})
+    @CreateDateColumn()
     registeredAt: Date
 
     @Column({default: Role.User})

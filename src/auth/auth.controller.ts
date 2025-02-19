@@ -1,34 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Res, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { SignupDTO } from './dto/signup.dto';
+import { SigninDTO } from './dto/signin.dto';
+import { Request, Response } from 'express';
+import { AuthGuard } from './guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  @Post('signup')
+  async signup(@Body() data: SignupDTO){
+    return await this.authService.signupServices(data)
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @Post('signin')
+  async signin(@Body() data: SigninDTO, @Res({ passthrough: true }) res: Response){
+    const {token, userWhitOutPassword} = await this.authService.signinServices(data);
+
+    res.cookie('token', token, {
+      httpOnly: true, 
+      secure: false, 
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24 * 1, 
+    });
+
+    res.json({
+      message: 'ok',
+      user: userWhitOutPassword
+    })
+  }
+  
+  @Get('session')
+  @UseGuards(AuthGuard)
+  getInfo(@Req() req){
+    return req.user
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
+  
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
-  }
 }
