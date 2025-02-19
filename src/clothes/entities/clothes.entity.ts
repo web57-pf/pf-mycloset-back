@@ -25,7 +25,7 @@ export class Clothes {
   user: User;
 
   @Column()
-  tags: String[]
+  tags: string
 
   @Column()
   favorite: Boolean
