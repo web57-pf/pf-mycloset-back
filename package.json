@@ -34,7 +34,6 @@
     "cloudinary": "^2.5.1",
     "dotenv": "^16.4.7",
     "pg": "^8.13.1",
-    "pj": "^0.3.5",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20"
