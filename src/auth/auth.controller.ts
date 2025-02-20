@@ -5,16 +5,19 @@ import { SigninDTO } from './dto/signin.dto';
 import { Request, Response } from 'express';
 import { AuthenticationGuard } from './guards/auth.guard';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiOperation({ summary: 'Registrar usuario', description: 'Registrar un nuevo usuario' })
   @Post('signup')
   async signup(@Body() data: SignupDTO){
     return await this.authService.signupServices(data)
   }
 
+  @ApiOperation({ summary: 'Registrar usuario', description: 'Iniciar session' })
   @Post('signin')
   async signin(@Body() data: SigninDTO, @Res({ passthrough: true }) res: Response){
     const {token, userWhitOutPassword} = await this.authService.signinServices(data);
@@ -32,6 +35,8 @@ export class AuthController {
     })
   }
   
+  @ApiOperation({ summary: 'Validacion de session', description: '...' })
+
   @Get('session')
   @UseGuards(AuthenticationGuard)
   getInfo(@Req() req){
@@ -39,10 +44,12 @@ export class AuthController {
   }
 
 
+  @ApiOperation({ summary: 'autorizacion de google', description: 'Proceso de autorizacion de google' })
   @Get('google')
   @UseGuards(AuthGuard('google'))
   async googleAuth(){console.log('Inicia el proceso de autenticación con Google.')}
 
+  @ApiOperation({ summary: 'Session google', description: 'Inicio de session una vez autorizado por google' })
   @Get('google/redirect')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req, @Res({ passthrough: true }) res: Response){
