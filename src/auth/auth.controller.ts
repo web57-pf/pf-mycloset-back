@@ -17,7 +17,7 @@ export class AuthController {
     return await this.authService.signupServices(data)
   }
 
-  @ApiOperation({ summary: 'Registrar usuario', description: 'Iniciar session' })
+  @ApiOperation({ summary: 'Inciar session', description: 'Iniciar session' })
   @Post('signin')
   async signin(@Body() data: SigninDTO, @Res({ passthrough: true }) res: Response){
     const {token, userWhitOutPassword} = await this.authService.signinServices(data);
