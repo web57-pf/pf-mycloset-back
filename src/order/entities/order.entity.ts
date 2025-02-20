@@ -6,8 +6,8 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "ty
     name: 'order'
 })
 export class Order {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn("uuid")
+    id: string;
 
     @ManyToOne(()=> User, (user) => user.orders)
     user: User

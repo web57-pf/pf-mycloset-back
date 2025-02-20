@@ -22,7 +22,6 @@ export class AuthService {
   }
 
   async signinServices(data: Partial<User>){
-    
     const user = await this.userRepository.findOneBy({email: data.email})
     if(!user) throw new UnauthorizedException('Credenciales invalidas!')
     const checkPassword = await compare(data.password, user.password)
@@ -34,6 +33,18 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
 
     return { token, userWhitOutPassword };
+  }
+
+  async valideteGoogleUser(googleUser: any){
+    let user = await this.userRepository.findOneBy({email: googleUser.email})
+    if(!user){
+      await this.userRepository.save(googleUser)
+    }
+
+    const payload = {user}
+    const token = this.jwtService.sign(payload)
+
+    return { user, token }
   }
 }
 

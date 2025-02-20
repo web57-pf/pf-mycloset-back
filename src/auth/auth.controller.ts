@@ -3,7 +3,8 @@ import { AuthService } from './auth.service';
 import { SignupDTO } from './dto/signup.dto';
 import { SigninDTO } from './dto/signin.dto';
 import { Request, Response } from 'express';
-import { AuthGuard } from './guards/auth.guard';
+import { AuthenticationGuard } from './guards/auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -32,11 +33,33 @@ export class AuthController {
   }
   
   @Get('session')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthenticationGuard)
   getInfo(@Req() req){
     return req.user
   }
 
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(){console.log('Inicia el proceso de autenticación con Google.')}
+
+  @Get('google/redirect')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Req() req, @Res({ passthrough: true }) res: Response){
+    
+    const {user, token} = await this.authService.valideteGoogleUser(req.user)
+
+    res.cookie('token', token, {
+      httpOnly: true, 
+      secure: false, 
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24 * 1, 
+    });
+
+    res.json({
+      msg: 'Aqui se debe redireccionar al dashboard o pagina del user autenticado'
+    })
+  } 
   
 
 }

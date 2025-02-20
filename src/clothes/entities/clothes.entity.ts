@@ -1,13 +1,15 @@
 import { Category } from "src/category/entities/category.entity";
+import { Combination } from "src/combinations/combinations.entity";
+import { Tags } from "src/tag/entities/tag.entity";
 import { User } from "src/users/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({
     name: 'clothes'
 })
 export class Clothes {
-    @PrimaryGeneratedColumn('uuid')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
@@ -24,9 +26,13 @@ export class Clothes {
   @ManyToOne(() => User, (user) => user.clothes)
   user: User;
 
-  @Column()
-  tags: string
+  @ManyToMany(() => Tags, (tags) => tags.clothes)
+  @JoinTable({name: 'clothes_tags'})
+  tags: Tags[]
 
-  @Column()
+  @Column({default: false})
   favorite: Boolean
+
+  @ManyToMany(()=> Combination, (combination)=> combination.clothes)
+  combinations: Combination[]
 }
