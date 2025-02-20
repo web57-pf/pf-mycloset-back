@@ -17,10 +17,6 @@ export class CreateClotheDto {
   @IsNotEmpty()
   imageUrl: string;
 
-  @IsUUID()
-  @IsNotEmpty()
-  userId: string;
-
   @IsUUID('4', { each: true })
   @IsOptional()
   tags?: string[];

@@ -39,4 +39,7 @@ export class User {
 
     @OneToMany(() => Order, (order) => order.user)
     orders: Order[];
+
+    @Column({default: false})
+    isDeleted: boolean
 }
