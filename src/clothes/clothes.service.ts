@@ -1,26 +1,91 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateClotheDto } from './dto/create-clothe.dto';
 import { UpdateClotheDto } from './dto/update-clothe.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Clothes } from './entities/clothes.entity';
+import { In, Repository } from 'typeorm';
+import { Category } from 'src/category/entities/category.entity';
+import { User } from 'src/users/entities/user.entity';
+import { Tags } from 'src/tags/entities/tags.entity';
+import { Combination } from 'src/combinations/combinations.entity';
 
 @Injectable()
 export class ClothesService {
-  create(createClotheDto: CreateClotheDto) {
-    return 'This action adds a new clothe';
+  constructor(
+    @InjectRepository(Clothes)
+    private readonly clothesRepository: Repository<Clothes>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Tags)
+    private readonly tagsRepository: Repository<Tags>,
+    @InjectRepository(Combination)
+    private readonly combinationRepository: Repository<Combination>,
+  ){}
+ // Recordar pedir auth para poder recibir el user por token
+  // async create(createClotheDto: CreateClotheDto): Promise<Clothes> {
+  //   const { name, categoryId, type, imageUrl, tags, favorite, combinations } = createClotheDto
+    
+  //   const category = await this.categoryRepository.findOne({where: {id: categoryId}})
+  //   if (!category) {throw new NotFoundException('Category not found')}
+
+  //   const user = await this.userRepository.findOne({where: {id: userId}})
+  //   if (!user) {throw new NotFoundException('User not found')}
+
+  //   let clothesTags: Tags[] = []
+  //   if (tags && tags.length) {
+  //     clothesTags = await this.tagsRepository.findBy({id: In(tags)})
+  //   }
+
+  //   let clothesCombinations: Combination[] = []
+  //   if (combinations && combinations.length) {
+  //     clothesCombinations = await this.combinationRepository.findBy({id: In(combinations)})
+  //   }
+
+  //   const clothes = this.clothesRepository.create({
+  //   name,
+  //   category,
+  //   type,
+  //   imageUrl,
+  //   user: userId,
+  //   tags: clothesTags,
+  //   favorite: favorite || false,
+  //   combinations: clothesCombinations
+  //   // })
+
+  //   // return await this.clothesRepository.save(clothes)
+
+  // }
+
+  async findAll(userId): Promise<Clothes[]> {
+    return await this.clothesRepository.find({
+      where: {
+        user: {id: userId}
+      }
+    })
   }
 
-  findAll() {
-    return `This action returns all clothes`;
+  async findOne(id): Promise<Clothes> {
+    return await this.clothesRepository.findOne({where:{id: id}})
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} clothe`;
+  async update(id: string, updatedClothe: UpdateClotheDto) {
+    const getClothe = await this.clothesRepository.findOne({where: {id}})
+
+    if(!getClothe) {
+      throw new NotFoundException(`Clothes with id: ${id} not found`)
+    }
+
+    Object.assign(getClothe, updatedClothe)
+    return await this.clothesRepository.save(getClothe)
   }
 
-  update(id: number, updateClotheDto: UpdateClotheDto) {
-    return `This action updates a #${id} clothe`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} clothe`;
+  async remove(id: string) {
+    const deletedUser = await this.clothesRepository.delete(id)
+    if(deletedUser.affected === 0) {
+      throw new NotFoundException(`Clothe with ID ${id} not found`)
+    }
+    return `Clothes with id: ${id} removed`;
   }
 }

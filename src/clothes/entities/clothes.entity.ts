@@ -1,6 +1,6 @@
 import { Category } from "src/category/entities/category.entity";
 import { Combination } from "src/combinations/combinations.entity";
-import { Tags } from "src/tag/entities/tag.entity";
+import { Tags } from "src/tags/entities/tags.entity";
 import { User } from "src/users/entities/user.entity";
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -14,7 +14,7 @@ export class Clothes {
   @Column()
   name: string;
 
-  @ManyToOne(() => Category, (category) => category.name)
+  @ManyToOne(() => Category, (category) => category.id)
   category: Category;
 
   @Column()
