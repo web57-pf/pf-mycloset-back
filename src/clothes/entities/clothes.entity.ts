@@ -14,7 +14,7 @@ export class Clothes {
   @Column()
   name: string;
 
-  @ManyToOne(() => Category, (category) => category.name)
+  @ManyToOne(() => Category, (category) => category.id)
   category: Category;
 
   @Column()
