@@ -29,14 +29,14 @@ export class ClothesController {
       }
     }
   })
-  create(@Body() createClotheDto: CreateClotheDto) {
-    return this.clothesService.create(createClotheDto);
-  }
+  // create(@Body() createClotheDto: CreateClotheDto) {
+  //   return this.clothesService.create(createClotheDto);
+  // }
 
   @ApiOperation({
     summary: 'Get all user clothes'
   })
-  @Get(':id')
+  @Get(':userid')
   findAll(@Param('userId') userId: string) {
     return this.clothesService.findAll(userId);
   }
