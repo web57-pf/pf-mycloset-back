@@ -31,7 +31,7 @@ export class User {
     @ManyToOne(()=> SubscriptionType, (subscription) => subscription.users)
     subscriptionType: SubscriptionType
 
-    @OneToMany(() => Clothes, (clothes) => clothes.id)
+    @OneToMany(() => Clothes, (clothes) => clothes.user)
     clothes: Clothes
 
     @OneToMany(() => Combination, (combination) => combination.user)
