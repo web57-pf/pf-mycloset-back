@@ -13,10 +13,13 @@ const PostgresDataSourceOptions: DataSourceOptions = {
     username: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
+    ssl: {
+        rejectUnauthorized: true,
+    },
+    entities: ['dist/**/*.entity{.ts,.js}'],
     synchronize: true,
     logging: false,
-    entities: ['dist/**/*.entity{.ts,.js}'],
-    migrations: ['dist/migration/*{.ts,.js}']
+    migrations: ['dist/migration/*{.ts,.js}'],
 }
 
 export const PostgresDataSourceConfig = registerAs(
