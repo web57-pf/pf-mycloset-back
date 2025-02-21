@@ -23,40 +23,39 @@ export class ClothesService {
     @InjectRepository(Combination)
     private readonly combinationRepository: Repository<Combination>,
   ){}
- // Recordar pedir auth para poder recibir el user por token
-  // async create(createClotheDto: CreateClotheDto): Promise<Clothes> {
-  //   const { name, categoryId, type, imageUrl, tags, favorite, combinations } = createClotheDto
+  async create(createClotheDto: CreateClotheDto, userId: string): Promise<Clothes> {
+    const { name, categoryId, type, imageUrl, tags, favorite, combinations } = createClotheDto
     
-  //   const category = await this.categoryRepository.findOne({where: {id: categoryId}})
-  //   if (!category) {throw new NotFoundException('Category not found')}
+    const category = await this.categoryRepository.findOne({where: {id: categoryId}})
+    if (!category) {throw new NotFoundException('Category not found')}
 
-  //   const user = await this.userRepository.findOne({where: {id: userId}})
-  //   if (!user) {throw new NotFoundException('User not found')}
+    const user = await this.userRepository.findOne({where: {id: userId}})
+    if (!user) {throw new NotFoundException('User not found')}
 
-  //   let clothesTags: Tags[] = []
-  //   if (tags && tags.length) {
-  //     clothesTags = await this.tagsRepository.findBy({id: In(tags)})
-  //   }
+    let clothesTags: Tags[] = []
+    if (tags && tags.length) {
+      clothesTags = await this.tagsRepository.findBy({id: In(tags)})
+    }
 
-  //   let clothesCombinations: Combination[] = []
-  //   if (combinations && combinations.length) {
-  //     clothesCombinations = await this.combinationRepository.findBy({id: In(combinations)})
-  //   }
+    let clothesCombinations: Combination[] = []
+    if (combinations && combinations.length) {
+      clothesCombinations = await this.combinationRepository.findBy({id: In(combinations)})
+    }
 
-  //   const clothes = this.clothesRepository.create({
-  //   name,
-  //   category,
-  //   type,
-  //   imageUrl,
-  //   user: userId,
-  //   tags: clothesTags,
-  //   favorite: favorite || false,
-  //   combinations: clothesCombinations
-  //   // })
+    const clothes = await this.clothesRepository.create({
+    name,
+    category,
+    type,
+    imageUrl,
+    user: user,
+    tags: clothesTags,
+    favorite: favorite,
+    combinations: clothesCombinations
+    })
 
-  //   // return await this.clothesRepository.save(clothes)
+    return await this.clothesRepository.save(clothes)
 
-  // }
+  }
 
   async findAll(userId): Promise<Clothes[]> {
     return await this.clothesRepository.find({
@@ -82,8 +81,8 @@ export class ClothesService {
   }
 
   async remove(id: string) {
-    const deletedUser = await this.clothesRepository.delete(id)
-    if(deletedUser.affected === 0) {
+    const deletedClothe = await this.clothesRepository.delete(id)
+    if(deletedClothe.affected === 0) {
       throw new NotFoundException(`Clothe with ID ${id} not found`)
     }
     return `Clothes with id: ${id} removed`;

@@ -31,7 +31,8 @@ export class AuthController {
 
     res.json({
       message: 'ok',
-      user: userWhitOutPassword
+      user: userWhitOutPassword,
+      token
     })
   }
   
