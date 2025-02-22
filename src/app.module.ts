@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostgresDataSourceConfig } from './config/data-source';
 import { ClothesModule } from './clothes/clothes.module';
 import { OrderDetailModule } from './order_detail/order_detail.module';
+import { CombinationsModule } from './combinations/combinations.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { OrderDetailModule } from './order_detail/order_detail.module';
     SuscriptionModule,
     ClothesModule,
     OrderDetailModule,
+    CombinationsModule,
   ],
   controllers: [],
   providers: [],

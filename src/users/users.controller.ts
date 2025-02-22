@@ -9,7 +9,7 @@ import { AuthenticationGuard } from 'src/auth/guards/auth.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
+  // @Get()
   // findAll() {
   //   return this.usersService.findAll()
   // }

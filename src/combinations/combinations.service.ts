@@ -13,8 +13,7 @@ export class CombinationsService {
         @InjectRepository(Clothes)
         private readonly clothesRepository: Repository<Clothes>
     ){}
-
-    async create(createCombinationDto: CreateCombinationDto): Promise<Combination>{
+    async create(createCombinationDto: CreateCombinationDto, userid): Promise<Combination>{
         const clothes = await this.clothesRepository.findBy({id: In(createCombinationDto.clothesIds)})
 
         if(clothes.length !== createCombinationDto.clothesIds.length){
