@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, UseGuards, Req, Query } from '@nestjs/common';
 import { ClothesService } from './clothes.service';
 import { CreateClotheDto } from './dto/create-clothe.dto';
 import { UpdateClotheDto } from './dto/update-clothe.dto';
@@ -88,5 +88,19 @@ export class ClothesController {
   remove(@Param('id') id: string) {
     this.clothesService.remove(id)
     return `Clothe with id: ${id}`;
+  }
+
+  @Get('filter/get')
+  filterClothes(
+    @Query('category') categoryId?: string,
+    @Query('tags') tags?: string,
+    @Query('favorite') favorite?: string
+  ){
+    console.log(categoryId)
+    console.log(tags)
+    const tagIds = tags ? tags.split(',') : undefined
+    const isFavorite = favorite !== undefined ? favorite === 'true' : undefined
+
+    return this.clothesService.getFilteredClothes(categoryId, tagIds, isFavorite)
   }
 }

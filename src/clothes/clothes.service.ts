@@ -87,4 +87,23 @@ export class ClothesService {
     }
     return `Clothes with id: ${id} removed`;
   }
+
+  async getFilteredClothes(categoryId?:string, tagIds?: string[], favorite?: boolean){
+    const query = this.clothesRepository.createQueryBuilder('clothes')
+    .leftJoinAndSelect('clothes.category', 'category')
+    .leftJoinAndSelect('clothes.tags', 'tags')
+
+    if (categoryId){
+      query.andWhere('category.id = :categoryId', {categoryId})
+    }
+
+    if (tagIds && tagIds.length > 0) {
+      query.andWhere('tags.id IN (:...tagIds)', {tagIds})
+    } 
+    if (favorite !== undefined) {
+      query.andWhere('clothes.favorite = :favorite', {favorite})
+    }
+
+    return query.getMany()
+  }
 }
