@@ -10,6 +10,7 @@ import { PostgresDataSourceConfig } from './config/data-source';
 import { ClothesModule } from './clothes/clothes.module';
 import { OrderDetailModule } from './order_detail/order_detail.module';
 import { CombinationsModule } from './combinations/combinations.module';
+import { TagsModule } from './tags/tags.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CombinationsModule } from './combinations/combinations.module';
     ClothesModule,
     OrderDetailModule,
     CombinationsModule,
+    TagsModule,
   ],
   controllers: [],
   providers: [],
