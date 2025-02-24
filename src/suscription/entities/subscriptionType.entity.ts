@@ -1,23 +1,22 @@
-import { User } from "src/users/entities/user.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { User } from 'src/users/entities/user.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({
-    name: 'subscriptionType'
+  name: 'subscriptionType',
 })
-
 export class SubscriptionType {
-    @PrimaryGeneratedColumn('uuid')
-    id: string
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column({unique: true})
-    SubscriptionType: string
+  @Column({ unique: true })
+  SubscriptionType: string;
 
-    @Column()
-    price: number
+  @Column()
+  price: number;
 
-    @Column()
-    durationDayTimes: number
+  @Column()
+  durationDayTimes: number;
 
-    @OneToMany(() => User, (user) => user.subscriptionType)
-    users: User[]
+  @OneToMany(() => User, (user) => user.subscriptionType)
+  users: User[];
 }

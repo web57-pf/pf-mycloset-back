@@ -7,7 +7,7 @@ import { Clothes } from 'src/clothes/entities/clothes.entity';
 import toStream from 'buffer-to-stream';
 
 @Injectable()
-export class FileUploadService {
+export class ClothesUploadService {
   constructor(
     @InjectRepository(Clothes)
     private readonly clothesRepository: Repository<Clothes>,
