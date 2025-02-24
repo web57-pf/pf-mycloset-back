@@ -1,7 +1,24 @@
+import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
+import { subscriptionCategory } from '../enum/suscriptionType';
+
 export class CreateSuscriptionDto {
+  @IsNotEmpty()
+  @IsString()
+  @IsUUID()
   id: string;
-  SubscriptionType: string;
+
+  @IsNotEmpty()
+  @IsNumber()
   price: number;
-  durationDayTimes: number;
-  users: [];
+
+  @IsNotEmpty()
+  @IsNumber()
+  duration: number;
+
+  @IsNotEmpty()
+  @IsString()
+  category: subscriptionCategory;
+
+  @IsUUID()
+  userId: string;
 }

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { SubscriptionType } from './entities/subscriptionType.entity';
+import { CreateSuscriptionDto } from './dto/create-suscription.dto';
 
 @Injectable()
 export class SuscriptionService {
@@ -22,7 +23,14 @@ export class SuscriptionService {
     await this.userRepository.save(user);
   }
 
-  async createSubscriptionType(subscriptionType: SubscriptionType) {
+  async createSubscriptionType(
+    createSuscriptionDto: CreateSuscriptionDto,
+  ): Promise<SubscriptionType> {
+    const subscriptionType =
+      this.subscriptionRepository.create(createSuscriptionDto);
+    if (!subscriptionType) {
+      throw new Error('Failed to create subscription entity');
+    }
     return await this.subscriptionRepository.save(subscriptionType);
   }
 
