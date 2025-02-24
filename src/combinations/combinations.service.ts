@@ -14,7 +14,11 @@ export class CombinationsService {
         private readonly clothesRepository: Repository<Clothes>
     ){}
     async create(createCombinationDto: CreateCombinationDto, userid): Promise<Combination>{
-        const clothes = await this.clothesRepository.findBy({id: In(createCombinationDto.clothesIds)})
+        const clothesIdsArray = Array.isArray(createCombinationDto.clothesIds) 
+        ? createCombinationDto.clothesIds 
+        : JSON.parse(createCombinationDto.clothesIds);
+
+        const clothes = await this.clothesRepository.findBy({id: In(clothesIdsArray)})
 
         if(clothes.length !== createCombinationDto.clothesIds.length){
             throw new NotFoundException('Some clothes were not found')
@@ -23,10 +27,11 @@ export class CombinationsService {
             name: createCombinationDto.name,
             clothes
         })
+        combination.user = userid
         return this.combinationRepository.save(combination)
     }
     async findAll(userId){
-        return this.combinationRepository.find({where:{user: userId}})
+        return this.combinationRepository.find({where:{user: {id: userId}}})
     }
     
     async findOne(id: string): Promise<Combination> {

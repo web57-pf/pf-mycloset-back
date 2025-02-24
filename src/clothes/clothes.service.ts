@@ -33,12 +33,12 @@ export class ClothesService {
     if (!user) {throw new NotFoundException('User not found')}
 
     let clothesTags: Tags[] = []
-    if (tags && tags.length) {
+    if (tags && Array.isArray(tags)) {
       clothesTags = await this.tagsRepository.findBy({id: In(tags)})
     }
 
     let clothesCombinations: Combination[] = []
-    if (combinations && combinations.length) {
+    if (combinations && Array.isArray(combinations)) {
       clothesCombinations = await this.combinationRepository.findBy({id: In(combinations)})
     }
 
