@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { CategoryModule } from './category/category.module';
-import { OrderModule } from './order/order.module';
+// import { OrderModule } from './order/order.module';
 import { AuthModule } from './auth/auth.module';
 import { SuscriptionModule } from './suscription/suscription.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -17,7 +17,8 @@ import { TagsModule } from './tags/tags.module';
     ConfigModule.forRoot({
       envFilePath: ['.env'],
       isGlobal: true,
-      load: [PostgresDataSourceConfig]}),
+      load: [PostgresDataSourceConfig],
+    }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) =>
@@ -25,7 +26,7 @@ import { TagsModule } from './tags/tags.module';
     }),
     UsersModule,
     CategoryModule,
-    OrderModule,
+    // OrderModule,
     AuthModule,
     SuscriptionModule,
     ClothesModule,
