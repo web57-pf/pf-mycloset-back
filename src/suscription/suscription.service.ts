@@ -1,26 +1,52 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Repository } from 'typeorm';
+import { SubscriptionType } from './entities/subscriptionType.entity';
 import { CreateSuscriptionDto } from './dto/create-suscription.dto';
-import { UpdateSuscriptionDto } from './dto/update-suscription.dto';
 
 @Injectable()
 export class SuscriptionService {
-  create(createSuscriptionDto: CreateSuscriptionDto) {
-    return 'This action adds a new suscription';
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(SubscriptionType)
+    private subscriptionRepository: Repository<SubscriptionType>,
+  ) {}
+
+  async suscribeUser(userId: string, suscribedId: string) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const suscribed = await this.userRepository.findOne({
+      where: { id: suscribedId },
+    });
+
+    user.subscriptionType = suscribed.subscriptionType;
+    await this.userRepository.save(user);
   }
 
-  findAll() {
-    return `This action returns all suscription`;
+  async createSubscriptionType(
+    createSuscriptionDto: CreateSuscriptionDto,
+  ): Promise<SubscriptionType> {
+    const subscriptionType =
+      this.subscriptionRepository.create(createSuscriptionDto);
+    if (!subscriptionType) {
+      throw new Error('Failed to create subscription entity');
+    }
+    return await this.subscriptionRepository.save(subscriptionType);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} suscription`;
+  async getAllSubscriptionTypes() {
+    return await this.subscriptionRepository.find();
   }
 
-  update(id: number, updateSuscriptionDto: UpdateSuscriptionDto) {
-    return `This action updates a #${id} suscription`;
+  async getSubscriptionTypeById(id: string) {
+    return await this.subscriptionRepository.findOne({ where: { id } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} suscription`;
+  async updateSubscriptionType(id: string, subscriptionType: SubscriptionType) {
+    return await this.subscriptionRepository.update(id, subscriptionType);
+  }
+
+  async deleteSubscriptionType(id: string) {
+    return await this.subscriptionRepository.delete(id);
   }
 }
