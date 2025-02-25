@@ -16,4 +16,7 @@ export class Combination {
   @ManyToMany(() => Clothes)
   @JoinTable()
   clothes: Clothes[];
+
+  @Column({default: false})
+  isDeleted: boolean
 }

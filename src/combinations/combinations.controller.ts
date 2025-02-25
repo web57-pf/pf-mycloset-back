@@ -69,6 +69,9 @@ export class CombinationsController {
         return this.combinationsService.update(id, updateCombinationDto);
     }
 
+    @ApiOperation({
+        summary: 'Soft deletes one user by id'
+    })
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.combinationsService.remove(id);

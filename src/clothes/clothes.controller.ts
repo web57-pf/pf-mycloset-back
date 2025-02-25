@@ -56,10 +56,10 @@ export class ClothesController {
   }
 
   @ApiOperation({
-    summary: 'Update user clothe by and body'
+    summary: 'Update user clothe by id and body'
   })
   @ApiBody({
-    description: 'Update clothe for user by body',
+    description: 'Update clothe for user by body and id',
     examples: {
       Clothe: {
         value: {

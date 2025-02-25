@@ -15,4 +15,6 @@ export class Category {
     @OneToMany(() => Clothes, (clothes) => clothes.category)
     clothes: Clothes[];
 
+    @Column({default: false})
+    isDeleted: boolean
 }

@@ -49,6 +49,7 @@ export class CategoryService {
     if(!category) {
       throw new NotFoundException(`Category with id ${id} not found`)
     }
-    return await this.categoryRepository.remove(category)
+    category.isDeleted = true
+    return await this.categoryRepository.save(category)
   }
 }

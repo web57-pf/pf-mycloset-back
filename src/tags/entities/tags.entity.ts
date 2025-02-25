@@ -14,4 +14,7 @@ export class Tags {
 
     @ManyToMany(()=> Clothes, (clothes) => clothes.tags)
     clothes: Clothes[]
+
+    @Column({default: false})
+    isDeleted: boolean
 }

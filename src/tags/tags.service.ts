@@ -39,10 +39,11 @@ export class TagsService {
         return await this.tagsRepository.save(updatedTags)
     }
     async remove(id: string) {
-        const tag = await this.tagsRepository.findOne({where: {id}})
+        const tag = await this.tagsRepository.findOne({where: {id: id}})
         if(!tag) {
             throw new NotFoundException(`Tag with id ${id} not found`)
           }
-        return this.tagsRepository.delete(id)
+        tag.isDeleted = true
+        return await this.tagsRepository.save(tag)
     }
 }

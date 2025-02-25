@@ -56,8 +56,8 @@ export class CombinationsService {
         if(!removedCombination) {
             throw new NotFoundException('Combination not found')
         }
-        await this.combinationRepository.remove(removedCombination)
+        removedCombination.isDeleted = true
+        await this.combinationRepository.save(removedCombination)
         return `Combination with id: ${id} has been removed`
     }
-    
 }

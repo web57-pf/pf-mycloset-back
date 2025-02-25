@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -29,6 +29,9 @@ export class UsersService {
 
   async remove(id: string) {
     const foundUser = await this.userRepository.findOne({where: {id: id}})
+    if (!foundUser) {
+      throw new NotFoundException('User not found')
+    }
     foundUser.isDeleted = true
     await this.userRepository.save(foundUser)
     return `User with id: ${id} has been removed`
