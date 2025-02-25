@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { contanst } from '../jwt.contanst';
+import { Role } from '../roles.enum';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -21,7 +22,11 @@ export class AuthenticationGuard implements CanActivate {
     try {
       const secret = contanst.secret;
       const user = this.jwtService.verify(token, { secret });
-
+      if(user.isAdmin){
+        user.roles = [Role.ADMIN]
+      }else{
+        user.roles = [Role.USER]
+      }
       request.user = user;
       return true;
     } catch (err) {
