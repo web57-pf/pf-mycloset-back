@@ -69,5 +69,16 @@ export class AuthController {
     })
   } 
   
-
+  @Get('logout')
+  @UseGuards(AuthenticationGuard)
+  async logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('token', { 
+      httpOnly: true, 
+      secure: false,
+      sameSite: 'lax',
+      path: '/'
+    });
+  
+    return res.json({ message: 'Sesión cerrada correctamente' });
+  }
 }

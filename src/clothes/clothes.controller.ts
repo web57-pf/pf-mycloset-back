@@ -23,7 +23,6 @@ export class ClothesController {
         value: {
           name: '',
           categoryId: '',
-          type: '',
           imageUrl: '',
           tags: '',
           favorite: '',
@@ -65,7 +64,6 @@ export class ClothesController {
         value: {
           name: '',
           categoryId: '',
-          type: '',
           imageUrl: '',
           tags: '',
           favorite: '',

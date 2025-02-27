@@ -18,9 +18,6 @@ export class Clothes {
   category: Category;
 
   @Column()
-  type: string
-
-  @Column()
   imageUrl: string
 
   @ManyToOne(() => User, (user) => user.clothes)
