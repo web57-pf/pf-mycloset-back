@@ -67,7 +67,7 @@ export class AuthController {
     // res.json({
     //   msg: 'Aqui se debe redireccionar al dashboard o pagina del user autenticado'
     // })
-    res.redirect(`https://${process.env.API_FRONT}/mycloset`);
+    res.redirect(`${process.env.API_FRONT}/mycloset`);
   } 
   
   @Get('logout')
