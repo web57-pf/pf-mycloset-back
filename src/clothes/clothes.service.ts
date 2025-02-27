@@ -24,7 +24,7 @@ export class ClothesService {
     private readonly combinationRepository: Repository<Combination>,
   ){}
   async create(createClotheDto: CreateClotheDto, userId: string): Promise<Clothes> {
-    const { name, categoryId, type, imageUrl, tags, favorite, combinations } = createClotheDto
+    const { name, categoryId, imageUrl, tags, favorite, combinations } = createClotheDto
     
     const category = await this.categoryRepository.findOne({where: {id: categoryId}})
     if (!category) {throw new NotFoundException('Category not found')}
@@ -45,7 +45,6 @@ export class ClothesService {
     const clothes = await this.clothesRepository.create({
     name,
     category,
-    type,
     imageUrl,
     user: user,
     tags: clothesTags,

@@ -1,5 +1,5 @@
 
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { Clothes } from "src/clothes/entities/clothes.entity";
 import { Combination } from "src/combinations/combinations.entity";
 import { Order } from "src/order/entities/order.entity";
@@ -8,6 +8,7 @@ import { SubscriptionType } from "src/suscription/entities/subscriptionType.enti
 @Entity({
     name: 'users'
 })
+@Unique(['email'])
 export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string

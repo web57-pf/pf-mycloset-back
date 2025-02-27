@@ -1,7 +1,8 @@
-import { IsEmail, IsOptional, IsString } from "class-validator";
+import { IsEmail, IsOptional, IsString, MinLength } from "class-validator";
 
 export class CreateUserDto {
     @IsString()
+    @MinLength(5, {message: 'Tu nombre de usuario debe tener al menos 5 caracteres'})
     name: string;
 
     @IsEmail()
@@ -9,7 +10,6 @@ export class CreateUserDto {
     email: string;
 
     @IsOptional()
-    @IsString()
     isDeleted?: boolean;
 }
 
