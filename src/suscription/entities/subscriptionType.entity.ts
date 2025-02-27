@@ -1,3 +1,4 @@
+import { OrderDetail } from 'src/order_detail/entities/order_detail.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -19,4 +20,7 @@ export class SubscriptionType {
 
   @OneToMany(() => User, (user) => user.subscriptionType)
   users: User[];
+
+  @OneToMany(() => OrderDetail, (orderDetail) => orderDetail.subscriptionType)
+  orderDetails: OrderDetail[];
 }

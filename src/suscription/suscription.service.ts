@@ -42,8 +42,11 @@ export class SuscriptionService {
     return await this.subscriptionRepository.findOne({ where: { id } });
   }
 
-  async updateSubscriptionType(id: string, subscriptionType: SubscriptionType) {
-    return await this.subscriptionRepository.update(id, subscriptionType);
+  async updateSubscriptionType(
+    userId: string,
+    subscriptionType: SubscriptionType,
+  ) {
+    return await this.subscriptionRepository.update(userId, subscriptionType);
   }
 
   async deleteSubscriptionType(id: string) {

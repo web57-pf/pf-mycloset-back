@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
-import { ClothesUploadService } from './clothes-upload.service';
+import { ClothesUploadService } from './file-upload.service';
 
 @ApiTags('file-upload')
 @Controller('file-upload')

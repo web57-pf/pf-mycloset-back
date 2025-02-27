@@ -26,7 +26,8 @@ export class SuscriptionController {
     examples: {
       SubscriptionType: {
         value: {
-          name: 'Basic',
+          //subscriptionType = name the subscriptionType
+          SubscriptionType: 'Basic',
           price: 10,
           duration: 30,
         },

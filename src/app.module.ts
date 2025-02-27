@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostgresDataSourceConfig } from './config/data-source';
 import { ClothesModule } from './clothes/clothes.module';
 import { OrderDetailModule } from './order_detail/order_detail.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { OrderDetailModule } from './order_detail/order_detail.module';
     SuscriptionModule,
     ClothesModule,
     OrderDetailModule,
+    EmailModule,
   ],
   controllers: [],
   providers: [],
