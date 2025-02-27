@@ -64,9 +64,10 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 1, 
     });
 
-    res.json({
-      msg: 'Aqui se debe redireccionar al dashboard o pagina del user autenticado'
-    })
+    // res.json({
+    //   msg: 'Aqui se debe redireccionar al dashboard o pagina del user autenticado'
+    // })
+    res.redirect(`https://${process.env.API_FRONT}/mycloset`);
   } 
   
   @Get('logout')
