@@ -60,7 +60,8 @@ export class ClothesService {
     return await this.clothesRepository.find({
       where: {
         user: {id: userId}
-      }
+      },
+      relations: ['category', 'tags', 'combinations']
     })
   }
 
@@ -80,10 +81,12 @@ export class ClothesService {
   }
 
   async remove(id: string) {
-    const deletedClothe = await this.clothesRepository.delete(id)
-    if(deletedClothe.affected === 0) {
+    const clothe = await this.clothesRepository.findOne({where: {id: id}})
+    if(!clothe){
       throw new NotFoundException(`Clothe with ID ${id} not found`)
     }
+    clothe.isDeleted = true
+    
     return `Clothes with id: ${id} removed`;
   }
 
