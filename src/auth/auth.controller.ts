@@ -25,22 +25,23 @@ export class AuthController {
     res.cookie('token', token, {
       httpOnly: true, 
       secure: true, 
-      sameSite: 'lax',
+      // sameSite: 'lax',
+      sameSite: 'none',
       maxAge: 1000 * 60 * 60 * 24 * 1, 
     });
 
     res.json({
       message: 'ok',
       user: userWhitOutPassword,
-      token
+      // token
     })
   }
   
   @ApiOperation({ summary: 'Validacion de session', description: '...' })
 
-  @Get('session')
+  @Post('session')
   @UseGuards(AuthenticationGuard)
-  getInfo(@Req() req){
+  UserInfo(@Req() req){
     return req.user
   }
 
@@ -60,7 +61,8 @@ export class AuthController {
     res.cookie('token', token, {
       httpOnly: true, 
       secure: true, 
-      sameSite: 'lax',
+      // sameSite: 'lax',
+      sameSite: 'none',
       maxAge: 1000 * 60 * 60 * 24 * 1, 
     });
 
@@ -76,7 +78,8 @@ export class AuthController {
     res.clearCookie('token', { 
       httpOnly: true, 
       secure: true,
-      sameSite: 'lax',
+      // sameSite: 'lax',
+      sameSite: 'none',
       path: '/'
     });
   
