@@ -1,17 +1,33 @@
-import { OrderDetail } from "src/order_detail/entities/order_detail.entity";
-import { User } from "src/users/entities/user.entity";
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { OrderDetail } from 'src/order_detail/entities/order_detail.entity';
+import { SubscriptionType } from 'src/suscription/entities/subscriptionType.entity';
+import { User } from 'src/users/entities/user.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({
-    name: 'order'
+  name: 'order',
 })
 export class Order {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @ManyToOne(()=> User, (user) => user.orders)
-    user: User
+  @Column()
+  date: Date;
 
-    @OneToMany(()=> OrderDetail, (details) => details.order)
-    details: OrderDetail[]
+  @ManyToOne(() => User, (user) => user.orders)
+  user: User;
+
+  @OneToMany(() => OrderDetail, (details) => details.order)
+  details: OrderDetail[];
+
+  @ManyToOne(
+    () => SubscriptionType,
+    (subscriptionType) => subscriptionType.orders,
+  )
+  subscriptionType: [];
 }

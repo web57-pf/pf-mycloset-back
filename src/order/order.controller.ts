@@ -1,38 +1,38 @@
-// import {
-//   Controller,
-//   Get,
-//   Post,
-//   Body,
-//   Patch,
-//   Param,
-//   Delete,
-//   ParseUUIDPipe,
-// } from '@nestjs/common';
-// import { OrderService } from './order.service';
-// import { CreateOrderDto } from './dto/create-order.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  ParseUUIDPipe,
+} from '@nestjs/common';
+import { OrderService } from './order.service';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { SubscriptionType } from 'src/suscription/entities/subscriptionType.entity';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Order } from './entities/order.entity';
 
-// @Controller('order')
-// export class OrderController {
-//   constructor(private readonly orderService: OrderService) {}
+@ApiTags('order')
+@Controller('order')
+export class OrderController {
+  constructor(private readonly orderService: OrderService) {}
 
-//   @Post()
-//   create(@Body() order: CreateOrderDto) {
-//     const { userId, suscription } = order;
-//     return this.orderService.addOrder(userId, suscription);
-//   }
+  @ApiOperation({ summary: 'Creación de orden' })
+  @ApiBody({ type: CreateOrderDto })
+  @Post()
+  create(@Body() order: CreateOrderDto & { subscription: SubscriptionType[] }) {
+    const { userId, subscription } = order;
+    return this.orderService.addOrder(userId, subscription);
+  }
+  @ApiOperation({ summary: 'Obtener todas las ordenes' })
+  @Get()
+  getOrders() {
+    return this.orderService.getOrders();
+  }
 
-//   @Get()
-//   @Get(':id')
-//   getOrder(@Param('id', ParseUUIDPipe) id: string) {
-//     return this.orderService.getOrder(id);
-//   }
-
-// @Patch(':id')
-// update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-//   return this.orderService.update(+id, updateOrderDto);
-// }
-
-// @Delete(':id')
-// remove(@Param('id') id: string) {
-//   return this.orderService.remove(+id);
-// }
+  @ApiOperation({ summary: 'Obtener todas las ordenes' })
+  @Get(':id')
+  getOrderById(@Param('id', ParseUUIDPipe) id: string) {
+    return this.orderService.getOrderById(id);
+  }
+}
