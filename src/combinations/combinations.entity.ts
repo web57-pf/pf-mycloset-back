@@ -13,8 +13,8 @@ export class Combination {
   @ManyToOne(() => User, (user) => user.combinations)
   user: User;
 
-  @ManyToMany(() => Clothes)
-  @JoinTable()
+  @ManyToMany(() => Clothes, (clothes) => clothes.combinations, {eager: true})
+  @JoinTable({name: 'combination_clothes_clothes'})
   clothes: Clothes[];
 
   @Column({default: false})

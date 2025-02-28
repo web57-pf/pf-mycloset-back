@@ -31,7 +31,9 @@ export class CombinationsService {
         return this.combinationRepository.save(combination)
     }
     async findAll(userId){
-        return this.combinationRepository.find({where:{user: {id: userId}}})
+        return this.combinationRepository.find({where:{user: {id: userId}},
+            relations: ['clothes', 'clothes.category', 'clothes.tags']
+        })
     }
     
     async findOne(id: string): Promise<Combination> {
