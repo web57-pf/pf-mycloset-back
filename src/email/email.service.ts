@@ -1,26 +1,79 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { CreateEmailDto } from './dto/create-email.dto';
-import { UpdateEmailDto } from './dto/update-email.dto';
 
 @Injectable()
 export class EmailService {
-  create(createEmailDto: CreateEmailDto) {
-    return 'This action adds a new email';
+  constructor(private readonly mailerService: MailerService) {}
+
+  async sendConfirmationEmail(user: string, email: string) {
+    const url = `http://localhost:3000/auth/confirm`;
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Confirm your email',
+      template: './confirmation',
+      context: {
+        name: user,
+        url,
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all email`;
+  async sendWelcomeEmail(user: string, email: string) {
+    const url = `http://localhost:3000/auth/login`;
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Welcome to our app',
+      template: './welcome.email',
+      context: {
+        name: user,
+        url,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} email`;
+  async sendResetPasswordEmail(user: string, email: string) {
+    const url = `http://localhost:3000/auth/reset-password`;
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Reset your password',
+      template: './reset.password',
+      context: {
+        name: user,
+        url,
+      },
+    });
   }
 
-  update(id: number, updateEmailDto: UpdateEmailDto) {
-    return `This action updates a #${id} email`;
+  async sendSubscriptionEmail(user: string, email: string) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Subscription Confirmation',
+      template: './subscription.confirm',
+      context: {
+        name: user,
+      },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} email`;
+  async sendCancellationEmail(user: string, email: string) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'cancel.email',
+      template: './cancel',
+      context: {
+        name: user,
+      },
+    });
+  }
+
+  async sendCancelSubscriptionEmail(user: string, email: string) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Subscription Cancellation',
+      template: './cancel.subscription',
+      context: {
+        name: user,
+      },
+    });
   }
 }

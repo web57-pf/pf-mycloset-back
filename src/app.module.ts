@@ -10,6 +10,7 @@ import { PostgresDataSourceConfig } from './config/data-source';
 import { ClothesModule } from './clothes/clothes.module';
 import { OrderDetailModule } from './order_detail/order_detail.module';
 import { EmailModule } from './email/email.module';
+import { FileUploadModule } from './file-upload/file-upload.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { EmailModule } from './email/email.module';
     UsersModule,
     CategoryModule,
     // OrderModule,
+    FileUploadModule,
     AuthModule,
     SuscriptionModule,
     ClothesModule,

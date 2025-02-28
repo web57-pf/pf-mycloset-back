@@ -7,12 +7,12 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
-import { ClothesUploadService } from './file-upload.service';
+import { FileUploadService } from './file-upload.service';
 
-@ApiTags('file-upload')
-@Controller('file-upload')
+@ApiTags('fileUpload')
+@Controller('fileUpload')
 export class FileUploadController {
-  constructor(private readonly clothesUploadService: ClothesUploadService) {}
+  constructor(private readonly fileUploadService: FileUploadService) {}
 
   @Post('upload')
   @ApiConsumes('multipart/form-data')
@@ -29,7 +29,9 @@ export class FileUploadController {
   })
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return this.clothesUploadService.uploadImage(file);
+    console.log(file);
+
+    return this.fileUploadService.uploadImage(file);
   }
 
   @Post('upload/:clotheid')
@@ -51,6 +53,6 @@ export class FileUploadController {
     @UploadedFile() file: Express.Multer.File,
     @Param('clotheid') clotheid: string,
   ) {
-    return this.clothesUploadService.uploadClotheImage(file, clotheid);
+    return this.fileUploadService.uploadClotheImage(file, clotheid);
   }
 }
