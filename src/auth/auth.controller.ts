@@ -24,7 +24,7 @@ export class AuthController {
 
     res.cookie('token', token, {
       httpOnly: true, 
-      secure: false, 
+      secure: true, 
       sameSite: 'lax',
       maxAge: 1000 * 60 * 60 * 24 * 1, 
     });
@@ -59,7 +59,7 @@ export class AuthController {
 
     res.cookie('token', token, {
       httpOnly: true, 
-      secure: false, 
+      secure: true, 
       sameSite: 'lax',
       maxAge: 1000 * 60 * 60 * 24 * 1, 
     });
@@ -75,7 +75,7 @@ export class AuthController {
   async logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('token', { 
       httpOnly: true, 
-      secure: false,
+      secure: true,
       sameSite: 'lax',
       path: '/'
     });
