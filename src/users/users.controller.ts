@@ -13,10 +13,15 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @Get()
-  // findAll() {
-  //   return this.usersService.findAll()
-  // }
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthenticationGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Get all users'
+  })
+  @Get()
+  async findAll() {
+    return await this.usersService.findAll()
+  }
 
   @ApiOperation({
     summary: 'get one user by id'

@@ -28,26 +28,26 @@ export class CombinationsController {
             }
         }
     })
-    create(@Body() CreateCombinationDto: CreateCombinationDto, @Req() req){
+    async create(@Body() CreateCombinationDto: CreateCombinationDto, @Req() req){
         const userid = req.user.id
-        return this.combinationsService.create(CreateCombinationDto, userid)
+        return await this.combinationsService.create(CreateCombinationDto, userid)
     }
     @ApiOperation({
         summary: 'Get all combinations for userId'
     })
     @UseGuards(AuthenticationGuard)
     @Get('user-combinations')
-    findAll(@Req() req) {
+    async findAll(@Req() req) {
         const userid = req.user.id
-        return this.combinationsService.findAll(userid);
+        return await this.combinationsService.findAll(userid);
     }
 
     @ApiOperation({
         summary: 'Get one specific combination by combination id'
     })
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.combinationsService.findOne(id);
+    async findOne(@Param('id') id: string) {
+        return await this.combinationsService.findOne(id);
     }
 
     @ApiOperation({
@@ -65,16 +65,16 @@ export class CombinationsController {
         }
     })
     @Put(':id')
-    update(@Param('id') id: string, @Body() updateCombinationDto: UpdateCombinationDto) {
-        return this.combinationsService.update(id, updateCombinationDto);
+    async update(@Param('id') id: string, @Body() updateCombinationDto: UpdateCombinationDto) {
+        return await this.combinationsService.update(id, updateCombinationDto);
     }
 
     @ApiOperation({
-        summary: 'Soft deletes one user by id'
+        summary: 'Soft deletes one clothe combination by id'
     })
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.combinationsService.remove(id);
+    async remove(@Param('id') id: string) {
+        return await this.combinationsService.remove(id);
     }
 
 

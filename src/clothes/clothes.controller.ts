@@ -31,9 +31,9 @@ export class ClothesController {
       }
     }
   })
-  create(@Body() createClotheDto: CreateClotheDto, @Req() req) {
+  async create(@Body() createClotheDto: CreateClotheDto, @Req() req) {
     const userid = req.user.id
-    return this.clothesService.create(createClotheDto, userid);
+    return await this.clothesService.create(createClotheDto, userid);
   }
 
   @UseGuards(AuthenticationGuard)
@@ -41,19 +41,21 @@ export class ClothesController {
     summary: 'Get all user clothes'
   })
   @Get()
-  findAll(@Req() req) {
+  async findAll(@Req() req) {
     const userId = req.user.id
-    return this.clothesService.findAll(userId);
+    return await this.clothesService.findAll(userId);
   }
 
+  @UseGuards(AuthenticationGuard)
   @ApiOperation({
     summary: 'Get user clothe by id'
   })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.clothesService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    return await this.clothesService.findOne(id);
   }
 
+  @UseGuards(AuthenticationGuard)
   @ApiOperation({
     summary: 'Update user clothe by id and body'
   })
@@ -73,23 +75,23 @@ export class ClothesController {
     }
   })
   @Put(':id')
-  updateClothe(@Param('id') id: string,
+  async updateClothe(@Param('id') id: string,
   @Body() updateClotheDto: UpdateClotheDto) {
-    const updatedClothe = this.clothesService.update(id, updateClotheDto);
-     return `Clothe with id: ${updatedClothe} has been updated`
+    const updatedClothe = await this.clothesService.update(id, updateClotheDto);
+     return `Clothe with id: ${updatedClothe.id} has been updated`
   }
 
   @ApiOperation({
     summary: 'Delete clothe by clothe id'
   })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    this.clothesService.remove(id)
-    return `Clothe with id: ${id}`;
+  async remove(@Param('id') id: string) {
+    await this.clothesService.remove(id)
+    return `Clothe with id: ${id} has been removed`;
   }
 
   @Get('filter/get')
-  filterClothes(
+  async filterClothes(
     @Query('category') categoryId?: string,
     @Query('tags') tags?: string,
     @Query('favorite') favorite?: string
@@ -99,6 +101,6 @@ export class ClothesController {
     const tagIds = tags ? tags.split(',') : undefined
     const isFavorite = favorite !== undefined ? favorite === 'true' : undefined
 
-    return this.clothesService.getFilteredClothes(categoryId, tagIds, isFavorite)
+    return await this.clothesService.getFilteredClothes(categoryId, tagIds, isFavorite)
   }
 }

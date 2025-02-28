@@ -59,18 +59,19 @@ export class ClothesService {
   async findAll(userId): Promise<Clothes[]> {
     return await this.clothesRepository.find({
       where: {
-        user: {id: userId}
+        user: {id: userId},
+        isDeleted: false
       },
       relations: ['category', 'tags', 'combinations']
     })
   }
 
-  async findOne(id): Promise<Clothes> {
-    return await this.clothesRepository.findOne({where:{id: id}})
+  async findOne(id: string): Promise<Clothes> {
+    return await this.clothesRepository.findOne({where:{id: id, isDeleted: false}})
   }
 
   async update(id: string, updatedClothe: UpdateClotheDto) {
-    const getClothe = await this.clothesRepository.findOne({where: {id}})
+    const getClothe = await this.clothesRepository.findOne({where: {id: id}})
 
     if(!getClothe) {
       throw new NotFoundException(`Clothes with id: ${id} not found`)
@@ -81,12 +82,12 @@ export class ClothesService {
   }
 
   async remove(id: string) {
-    const clothe = await this.clothesRepository.findOne({where: {id: id}})
-    if(!clothe){
+    const deletedClothe = await this.clothesRepository.findOne({where: {id: id}})
+    if(!deletedClothe){
       throw new NotFoundException(`Clothe with ID ${id} not found`)
     }
-    clothe.isDeleted = true
-    
+    deletedClothe.isDeleted = true
+    await this.clothesRepository.save(deletedClothe)
     return `Clothes with id: ${id} removed`;
   }
 

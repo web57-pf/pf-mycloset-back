@@ -15,8 +15,8 @@ export class TagsController {
         summary: 'Seeds pre-loaded clothes'
     })
     @Post('seed')
-    seedTags(){
-        return this.tagsService.seedTags(tagsSeeder)
+    async seedTags(){
+        return await this.tagsService.seedTags(tagsSeeder)
     }
 
     @ApiOperation({
@@ -33,24 +33,24 @@ export class TagsController {
         }
     })
     @Post()
-    create(@Body() createTagsDto: CreateTagsDto) {
-        return this.tagsService.create(createTagsDto)
+    async create(@Body() createTagsDto: CreateTagsDto) {
+        return await this.tagsService.create(createTagsDto)
     }
 
     @ApiOperation({
         summary: 'Get all tags'
     })
     @Get()
-    findAll(){
-        return this.tagsService.findAll()
+    async findAll(){
+        return await this.tagsService.findAll()
     }
 
     @ApiOperation({
         summary: 'Get one tag by id'
     })
     @Get(':id')
-    findOne(@Param('id') id: string){
-        return this.tagsService.findOne(id)
+    async findOne(@Param('id') id: string){
+        return await this.tagsService.findOne(id)
     }
 
     @ApiOperation({
@@ -67,16 +67,16 @@ export class TagsController {
         }
     })
     @Put(':id')
-    update(@Param('id') id: string,
+    async update(@Param('id') id: string,
         @Body() updateTagsDto: UpdateTagsDto){
-        return this.tagsService.update(id, updateTagsDto)
+        return await this.tagsService.update(id, updateTagsDto)
     }
 
     @ApiOperation({
         summary: 'Removes one tag by id'
     })
     @Delete(':id')
-    remove(@Param('id') id: string){
-        return this.tagsService.remove(id)
+    async remove(@Param('id') id: string){
+        return await this.tagsService.remove(id)
     }
 }

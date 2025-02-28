@@ -11,9 +11,9 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>
   ){}
-  // findAll() {
-  //   return `This action returns all users`;
-  // }
+  async findAll() {
+    return this.userRepository.find()
+  }
 
   async findOne(id: string) {
     const foundUser = await this.userRepository.findOne({where: {id: id}})

@@ -4,6 +4,7 @@ import { Combination } from "./combinations.entity";
 import { In, Repository } from "typeorm";
 import { Clothes } from "src/clothes/entities/clothes.entity";
 import { CreateCombinationDto } from "./dto/create-cominations.dto";
+import { UpdateCombinationDto } from "./dto/update-combinations.dto";
 
 @Injectable()
 export class CombinationsService {
@@ -37,19 +38,28 @@ export class CombinationsService {
     }
     
     async findOne(id: string): Promise<Combination> {
-        const combination = await this.combinationRepository.findOne({where:{id: id}});
+        const combination = await this.combinationRepository.findOne({where:{id: id, isDeleted: false}});
         if (!combination) {
             throw new NotFoundException('Combination not found');
         }
         return combination;
     }
 
-    async update(id, updatedCombination){
+    async update(id, updatedCombination: UpdateCombinationDto){
         const getCombination = await this.combinationRepository.findOne({where: {id: id}})
         if(!getCombination) {
             throw new NotFoundException('Combination not found')
         }
-        Object.assign(getCombination, updatedCombination)
+        if(updatedCombination.name !== undefined){
+            getCombination.name = updatedCombination.name
+        }
+        if(updatedCombination.clothesIds !== undefined){
+            const clothes = await this.clothesRepository.findBy({id: In(updatedCombination.clothesIds)})
+            if (clothes.length !== updatedCombination.clothesIds.length){
+                throw new NotFoundException('Some clothes were not found')
+            }
+            getCombination.clothes = clothes
+        }
         return await this.combinationRepository.save(getCombination)
     }
 
