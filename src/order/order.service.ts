@@ -19,7 +19,11 @@ export class OrderService {
     private suscriptionRepository: Repository<SubscriptionType>,
   ) {}
 
-  async getOrders(id: string): Promise<Order> {
+  async getOrders(): Promise<Order[]> {
+    return this.orderRepository.find({ relations: ['details'] });
+  }
+
+  async getOrderById(id: string): Promise<Order> {
     const order = await this.orderRepository.findOne({
       where: { id },
       relations: {

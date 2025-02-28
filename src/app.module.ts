@@ -11,6 +11,9 @@ import { ClothesModule } from './clothes/clothes.module';
 import { OrderDetailModule } from './order_detail/order_detail.module';
 import { EmailModule } from './email/email.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
+import { ScheduleModule } from '@nestjs/schedule';
+// import { CronModule } from './cron/cron.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -24,15 +27,17 @@ import { FileUploadModule } from './file-upload/file-upload.module';
       useFactory: (configService: ConfigService) =>
         configService.get('postgres'),
     }),
+    ScheduleModule.forRoot(),
     UsersModule,
     CategoryModule,
-    // OrderModule,
+    OrderModule,
     FileUploadModule,
     AuthModule,
     SuscriptionModule,
     ClothesModule,
     OrderDetailModule,
     EmailModule,
+    // CronModule,
   ],
   controllers: [],
   providers: [],

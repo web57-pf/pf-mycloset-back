@@ -1,1 +1,4 @@
-export class CreateOrderDetailDto {}
+export class CreateOrderDetailDto {
+  userId: string;
+  subscription: string[];
+}
