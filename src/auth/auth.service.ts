@@ -29,7 +29,8 @@ export class AuthService {
      
     const { password, ...userWhitOutPassword} = user  
 
-    const payload = { id: user.id, email: user.email };
+    const payload = { id: user.id, email: user.email, isAdmin: user.isAdmin };
+    
     const token = this.jwtService.sign(payload);
 
     return { token, userWhitOutPassword };

@@ -31,7 +31,8 @@ export class AuthController {
 
     res.json({
       message: 'ok',
-      user: userWhitOutPassword
+      user: userWhitOutPassword,
+      token
     })
   }
   
@@ -63,10 +64,22 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 1, 
     });
 
-    res.json({
-      msg: 'Aqui se debe redireccionar al dashboard o pagina del user autenticado'
-    })
+    // res.json({
+    //   msg: 'Aqui se debe redireccionar al dashboard o pagina del user autenticado'
+    // })
+    res.redirect(`${process.env.API_FRONT}/mycloset`);
   } 
   
-
+  @Get('logout')
+  @UseGuards(AuthenticationGuard)
+  async logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('token', { 
+      httpOnly: true, 
+      secure: false,
+      sameSite: 'lax',
+      path: '/'
+    });
+  
+    return res.json({ message: 'Sesión cerrada correctamente' });
+  }
 }

@@ -14,11 +14,8 @@ export class Clothes {
   @Column()
   name: string;
 
-  @ManyToOne(() => Category, (category) => category.id)
+  @ManyToOne(() => Category, (category) => category.clothes)
   category: Category;
-
-  @Column()
-  type: string
 
   @Column()
   imageUrl: string
@@ -31,8 +28,11 @@ export class Clothes {
   tags: Tags[]
 
   @Column({default: false})
-  favorite: Boolean
+  favorite: boolean
 
   @ManyToMany(()=> Combination, (combination)=> combination.clothes)
   combinations: Combination[]
+
+  @Column({default: false})
+  isDeleted: boolean
 }

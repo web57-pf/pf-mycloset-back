@@ -1,8 +1,10 @@
-import { IsString, IsNotEmpty, IsUUID, IsBoolean, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsUUID, IsBoolean, IsOptional, MinLength, MaxLength } from 'class-validator';
 
 export class CreateClotheDto {
   @IsString()
   @IsNotEmpty()
+  @MinLength(10, {message: 'El nombre debe tener al menos 10 caracteres'})
+  @MaxLength(30, {message: 'El nombre debe tener no mas de 30 caracteres'})
   name: string;
 
   @IsUUID()
@@ -11,21 +13,17 @@ export class CreateClotheDto {
 
   @IsString()
   @IsNotEmpty()
-  type: string;
-
-  @IsString()
-  @IsNotEmpty()
   imageUrl: string;
 
-  @IsUUID('4', { each: true })
   @IsOptional()
+  @IsUUID('4', { each: true })
   tags?: string[];
 
-  @IsBoolean()
   @IsOptional()
+  @IsBoolean()
   favorite?: boolean;
 
-  @IsUUID('4', { each: true })
   @IsOptional()
+  @IsUUID('4', { each: true })
   combinations?: string[];
 }

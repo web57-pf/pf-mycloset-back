@@ -13,9 +13,12 @@ export class CombinationsService {
         @InjectRepository(Clothes)
         private readonly clothesRepository: Repository<Clothes>
     ){}
+    async create(createCombinationDto: CreateCombinationDto, userid): Promise<Combination>{
+        const clothesIdsArray = Array.isArray(createCombinationDto.clothesIds) 
+        ? createCombinationDto.clothesIds 
+        : JSON.parse(createCombinationDto.clothesIds);
 
-    async create(createCombinationDto: CreateCombinationDto): Promise<Combination>{
-        const clothes = await this.clothesRepository.findBy({id: In(createCombinationDto.clothesIds)})
+        const clothes = await this.clothesRepository.findBy({id: In(clothesIdsArray)})
 
         if(clothes.length !== createCombinationDto.clothesIds.length){
             throw new NotFoundException('Some clothes were not found')
@@ -24,10 +27,13 @@ export class CombinationsService {
             name: createCombinationDto.name,
             clothes
         })
+        combination.user = userid
         return this.combinationRepository.save(combination)
     }
     async findAll(userId){
-        return this.combinationRepository.find({where:{user: userId}})
+        return this.combinationRepository.find({where:{user: {id: userId}},
+            relations: ['clothes', 'clothes.category', 'clothes.tags']
+        })
     }
     
     async findOne(id: string): Promise<Combination> {
@@ -52,8 +58,8 @@ export class CombinationsService {
         if(!removedCombination) {
             throw new NotFoundException('Combination not found')
         }
-        await this.combinationRepository.remove(removedCombination)
+        removedCombination.isDeleted = true
+        await this.combinationRepository.save(removedCombination)
         return `Combination with id: ${id} has been removed`
     }
-    
 }

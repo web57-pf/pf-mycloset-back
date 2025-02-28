@@ -1,0 +1,1 @@
+export const categorySeeder = ['Pantalones', 'Camiseta', 'Chalecos', 'Bufandas', 'Carteras', 'Camisas', 'Sueter', 'Polleras']
