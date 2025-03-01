@@ -1,11 +1,13 @@
 import { Controller, Get, HttpException, HttpStatus, Post, Query } from '@nestjs/common';
 import { MercadopagoService } from './mercadopago.service';
+import { OrderService } from 'src/order/order.service';
+import { status } from 'src/order/enum/order-status';
 
 @Controller('mercadopago')
 export class MercadopagoController {
     constructor(
-        private readonly mercadopagoService: MercadopagoService
-        // private readonly ordersService: OrdersService
+        private readonly mercadopagoService: MercadopagoService,
+        private readonly ordersService: OrderService,
         //relacion mailer
     ){}
 
@@ -18,9 +20,12 @@ export class MercadopagoController {
                 )
                 if(payment.status==='approved'){
                     const orderId = payment.metadata.orderId
-                    //agregar relacion con ordersService 
+                    await this.ordersService.updateStatus(orderId, status.PAID)
                     //agregar relacion con mailer
                 } else{
+                    console.log('No aprobado')
+                    const orderId = payment.metadata.orderId
+                    await this.ordersService.updateStatus(orderId, status.NOT_PAID)
                     //mailer cancelado
                 }
             }
@@ -38,14 +43,14 @@ export class MercadopagoController {
 
         if (payment.status = 'approved') {
             const orderId = payment.metadata.orderId
-            //relacion orders
+            await this.ordersService.updateStatus(orderId, status.PAID)
             return {message: 'Suscripción aprobada'}
         } else {
             return { message: 'Suscripción no aprobada'}
         }
     }
-    @Get('failure')
-    async failure(@Query() queries){
-        return {message: 'El pago falló. Vuelva a intentar.'}
-    }
+    // @Get('failure')
+    // async failure(@Query() queries){
+    //     return { message: 'El pago falló. Vuelva a intentar.' }
+    // }
 }

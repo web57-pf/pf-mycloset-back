@@ -13,6 +13,9 @@ export class OrderDetail {
   startedAt: Date;
 
   @Column()
+  endsAt: Date
+
+  @Column()
   price: number;
 
   @ManyToOne(() => Order, (order) => order.details)

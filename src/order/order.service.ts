@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { SubscriptionType } from 'src/suscription/entities/subscriptionType.entity';
 import { OrderDetail } from 'src/order_detail/entities/order_detail.entity';
+import { status } from './enum/order-status';
 
 @Injectable()
 export class OrderService {
@@ -50,6 +51,7 @@ export class OrderService {
     const order = new Order();
     order.date = new Date();
     order.user = user;
+    order.status = status.PENDING
 
     const newOrder = await this.orderRepository.save(order);
 
@@ -76,6 +78,8 @@ export class OrderService {
     orderDetail.price = Number(totalPrice.toFixed(2));
     orderDetail.subscriptionType = subscriptionArray[0];
     orderDetail.order = newOrder;
+    orderDetail.startedAt = new Date()
+    orderDetail.endsAt.setDate(orderDetail.startedAt.getDate() + 30)
 
     await this.orderDetailRepository.save(orderDetail);
 
@@ -92,4 +96,20 @@ export class OrderService {
     }
     return saveOrder;
   }
+
+  async updateStatus(orderid: string, newStatus: string){
+    const getOrder = await this.orderRepository.findOne({where:{id: orderid}})
+    if(!getOrder){
+      throw new NotFoundException(`Order with ID ${orderid} not found`)
+    }
+    if(newStatus === status.PAID){
+      getOrder.status = status.PAID
+    } else{
+      getOrder.status = status.NOT_PAID
+    }
+    await this.orderRepository.save(getOrder)
+
+    return `Order with id ${orderid} has been updated to ${newStatus}`
+  }
+
 }

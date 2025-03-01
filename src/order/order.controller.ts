@@ -5,6 +5,7 @@ import {
   Body,
   Param,
   ParseUUIDPipe,
+  Put,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -34,5 +35,13 @@ export class OrderController {
   @Get(':id')
   getOrderById(@Param('id', ParseUUIDPipe) id: string) {
     return this.orderService.getOrderById(id);
+  }
+
+  @Put(':orderId')
+  async updateOrderStatus(
+    @Param('orderId') orderId: string,
+    @Body('status') status: string,
+  ) {
+    return await this.updateOrderStatus(orderId, status)
   }
 }

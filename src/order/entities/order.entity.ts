@@ -8,6 +8,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { status } from '../enum/order-status';
 
 @Entity({
   name: 'order',
@@ -25,9 +26,12 @@ export class Order {
   @OneToMany(() => OrderDetail, (details) => details.order)
   details: OrderDetail[];
 
+  @Column({default: status.PENDING})
+  status: string
+
   @ManyToOne(
     () => SubscriptionType,
     (subscriptionType) => subscriptionType.orders,
   )
-  subscriptionType: [];
+  subscriptionType: SubscriptionType;
 }
