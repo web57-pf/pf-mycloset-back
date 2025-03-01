@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-// import { ClothesService } from './clothes.service';
-// import { ClothesController } from './clothes.controller';
+import { ClothesService } from './clothes.service';
+import { ClothesController } from './clothes.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Clothes } from './entities/clothes.entity';
 import { Category } from 'src/category/entities/category.entity';
@@ -12,7 +12,7 @@ import { AuthModule } from 'src/auth/auth.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Clothes, Category, User, Tags, Combination]), 
   AuthModule],
-  // controllers: [ClothesController],
-  // providers: [ClothesService],
+  controllers: [ClothesController],
+  providers: [ClothesService],
 })
 export class ClothesModule {}
