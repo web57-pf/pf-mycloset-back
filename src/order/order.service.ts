@@ -50,7 +50,7 @@ export class OrderService {
       throw new NotFoundException(`User with id ${orderDto.userId} not found`);
     }
 
-    const totalPrice = subsPrice[orderDto.preferedSub] ?? 0;
+    // const totalPrice = subsPrice[orderDto.preferedSub] ?? 0;
 
     const order = this.orderRepository.create({
       date: new Date(),
@@ -62,7 +62,7 @@ export class OrderService {
     const newOrder = await this.orderRepository.save(order);
 
     const orderDetail = this.orderDetailRepository.create({
-      price: parseFloat(totalPrice.toFixed(2)),
+      price: Number(orderDto.price),
       order: newOrder,
       startedAt: new Date(),
       endsAt: new Date(),
@@ -72,7 +72,7 @@ export class OrderService {
 
     try {
       const preference = await this.mercadopagoService.createPreference(
-        totalPrice,
+        Number(orderDto.price),
         newOrder.id,
         user.email,
       );
