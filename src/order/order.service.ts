@@ -76,8 +76,11 @@ export class OrderService {
         newOrder.id,
         user.email,
       );
-      const orderId = this.orderRepository.findOne({where:{id: newOrder.id}})
-      return {preference, orderId}
+      const orderId = await this.orderRepository.findOne({where:{id: newOrder.id}})
+      return {
+        order: orderId,
+        initPoint: preference.init_point,
+    };
       
       // console.log('MercadoPago Preference:', preference);
     } catch (error) {
