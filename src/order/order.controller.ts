@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { SubscriptionType } from 'src/suscription/entities/subscriptionType.entity';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Order } from './entities/order.entity';
 
@@ -21,9 +20,8 @@ export class OrderController {
   @ApiOperation({ summary: 'Creación de orden' })
   @ApiBody({ type: CreateOrderDto })
   @Post()
-  create(@Body() order: CreateOrderDto & { subscription: SubscriptionType[] }) {
-    const { userId, subscription } = order;
-    return this.orderService.addOrder(userId, subscription);
+  async create(@Body() order: CreateOrderDto) {
+    return await this.orderService.addOrder(order)
   }
   @ApiOperation({ summary: 'Obtener todas las ordenes' })
   @Get()

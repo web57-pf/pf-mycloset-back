@@ -1,5 +1,4 @@
 import { Order } from 'src/order/entities/order.entity';
-import { SubscriptionType } from 'src/suscription/entities/subscriptionType.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({
@@ -20,10 +19,4 @@ export class OrderDetail {
 
   @ManyToOne(() => Order, (order) => order.details)
   order: Order;
-
-  @ManyToOne(
-    () => SubscriptionType,
-    (subscriptionType) => subscriptionType.orderDetails,
-  )
-  subscriptionType: SubscriptionType;
 }

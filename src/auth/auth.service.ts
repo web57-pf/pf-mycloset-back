@@ -29,7 +29,7 @@ export class AuthService {
      
     const { password, ...userWhitOutPassword} = user  
 
-    const payload = { id: user.id, email: user.email, isAdmin: user.isAdmin };
+    const payload = { id: user.id, email: user.email, isAdmin: user.isAdmin, subscription: user.subscriptionType };
     
     const token = this.jwtService.sign(payload);
 

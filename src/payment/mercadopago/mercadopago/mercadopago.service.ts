@@ -20,7 +20,7 @@ export class MercadopagoService {
     async createPreference(amount: number, orderId: string, email: string){
         const items = [{
             id: 'suscripcion-mycloset',
-            title: 'Suscripción mensual mycloset',
+            title: 'Suscripción mycloset',
             quantity: 1,
             unit_price: amount
         }]
@@ -32,7 +32,7 @@ export class MercadopagoService {
                         success: '',
                         failure: ''
                     },
-                    notification_url: '',
+                    notification_url: 'https://pf-mycloset-back.onrender.com',
                     metadata: {
                         orderId,
                         email

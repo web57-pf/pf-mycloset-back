@@ -3,7 +3,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGenerate
 import { Clothes } from "src/clothes/entities/clothes.entity";
 import { Combination } from "src/combinations/combinations.entity";
 import { Order } from "src/order/entities/order.entity";
-import { SubscriptionType } from "src/suscription/entities/subscriptionType.entity";
+import { subsType } from "../enum/suscriptionType";
 
 @Entity({
     name: 'users'
@@ -28,8 +28,8 @@ export class User {
     @Column({type: "boolean", default: false})
     isAdmin: boolean
 
-    @ManyToOne(()=> SubscriptionType, (subscription) => subscription.users)
-    subscriptionType: SubscriptionType
+    @Column({default: subsType.free})
+    subscriptionType: subsType
 
     @OneToMany(() => Clothes, (clothes) => clothes.user)
     clothes: Clothes

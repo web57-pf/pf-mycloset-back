@@ -1,14 +1,16 @@
 import { OrderDetail } from 'src/order_detail/entities/order_detail.entity';
-import { SubscriptionType } from 'src/suscription/entities/subscriptionType.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { status } from '../enum/order-status';
+import { subsType } from 'src/users/enum/suscriptionType';
 
 @Entity({
   name: 'order',
@@ -29,9 +31,6 @@ export class Order {
   @Column({default: status.PENDING})
   status: string
 
-  @ManyToOne(
-    () => SubscriptionType,
-    (subscriptionType) => subscriptionType.orders,
-  )
-  subscriptionType: SubscriptionType;
+  @Column({default: subsType.free})
+  subsType: string
 }

@@ -3,7 +3,6 @@ import { UsersModule } from './users/users.module';
 import { CategoryModule } from './category/category.module';
 // import { OrderModule } from './order/order.module';
 import { AuthModule } from './auth/auth.module';
-import { SuscriptionModule } from './suscription/suscription.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostgresDataSourceConfig } from './config/data-source';
@@ -38,7 +37,6 @@ import { TagsModule } from './tags/tags.module';
     OrderModule,
     // FileUploadModule,
     AuthModule,
-    SuscriptionModule,
     ClothesModule,
     OrderDetailModule,
 
