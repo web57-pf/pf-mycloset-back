@@ -4,7 +4,7 @@ import { CreateCombinationDto } from "./dto/create-cominations.dto";
 import { UpdateCombinationDto } from "./dto/update-combinations.dto";
 import { AuthenticationGuard } from "src/auth/guards/auth.guard";
 import { ApiBody, ApiOperation } from "@nestjs/swagger";
-
+import { SubscriptionGuard } from '../auth/guards/subscription.guard'
 
 
 @Controller('combinations')
@@ -12,7 +12,7 @@ export class CombinationsController {
     constructor(
         private readonly combinationsService: CombinationsService
     ){}
-    @UseGuards(AuthenticationGuard)
+    @UseGuards(AuthenticationGuard, SubscriptionGuard)
     @Post('create-combination')
     @ApiOperation({
         summary: 'Creates combination for user'
