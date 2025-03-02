@@ -41,7 +41,7 @@ export class OrderService {
     return order;
   }
 
-  async addOrder(orderDto: CreateOrderDto): Promise<Order> {
+  async addOrder(orderDto: CreateOrderDto): Promise<any> {
     const user = await this.userRepository.findOne({
       where: { id: orderDto.userId },
     });
@@ -76,15 +76,17 @@ export class OrderService {
         newOrder.id,
         user.email,
       );
-      console.log('MercadoPago Preference:', preference);
+      const orderId = this.orderRepository.findOne({where:{id: newOrder.id}})
+      return {preference, orderId}
+      
+      // console.log('MercadoPago Preference:', preference);
     } catch (error) {
       throw new HttpException(
         'Error al crear la preferencia de pago',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-
-    return this.getOrderById(newOrder.id); // Traer la orden con las relaciones
+    // return this.getOrderById(newOrder.id); // Traer la orden con las relaciones
   }
 
   async updateStatus(orderId: string, newStatus: string): Promise<string> {
