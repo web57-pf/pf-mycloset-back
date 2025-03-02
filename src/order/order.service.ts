@@ -7,6 +7,7 @@ import { OrderDetail } from 'src/order_detail/entities/order_detail.entity';
 import { status } from './enum/order-status';
 import { MercadopagoService } from 'src/payment/mercadopago/mercadopago/mercadopago.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { subsPrice } from 'src/users/enum/suscriptionType';
 
 @Injectable()
 export class OrderService {
@@ -48,8 +49,7 @@ export class OrderService {
     order.status = status.PENDING
     order.subsType = orderDto.preferedSub
     
-    const precios = [0, 5, 10]
-    totalPrice = precios[1]
+    totalPrice = subsPrice[orderDto.preferedSub]
     const newOrder = await this.orderRepository.save(order);
     
     const orderDetail = new OrderDetail();

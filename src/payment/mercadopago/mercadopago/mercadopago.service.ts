@@ -42,6 +42,7 @@ export class MercadopagoService {
             return response
             
         } catch (error) {
+            console.log(error)
             throw new BadRequestException('No se pudo crear la preferencia de pago.')
         }
     }
