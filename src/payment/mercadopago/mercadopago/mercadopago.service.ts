@@ -18,11 +18,16 @@ export class MercadopagoService {
     }
 
     async createPreference(amount: number, orderId: string, email: string){
+
+        if (typeof amount !== 'number' || isNaN(amount) || amount <= 0) {
+            throw new BadRequestException('El precio debe ser un número positivo.');
+          }
+
         const items = [{
             id: 'suscripcion-mycloset',
             title: 'Suscripción mycloset',
             quantity: 1,
-            unit_price: amount
+            unit_price: Number(amount.toFixed(2))
         }]
         try {
             const response = await this.preference.create({
