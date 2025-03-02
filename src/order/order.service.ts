@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,7 +23,7 @@ export class OrderService {
     private userRepository: Repository<User>,
     @InjectRepository(OrderDetail)
     private orderDetailRepository: Repository<OrderDetail>,
-    private mercadopagoService: MercadopagoService
+    private mercadopagoService: MercadopagoService,
   ) {}
 
   async getOrders(): Promise<Order[]> {
@@ -28,6 +33,7 @@ export class OrderService {
   async getOrderById(id: string): Promise<Order> {
     const order = await this.orderRepository.findOne({
       where: { id },
+      relations: ['details'],
     });
     if (!order) {
       throw new NotFoundException(`Order with id ${id} not found`);
@@ -35,60 +41,64 @@ export class OrderService {
     return order;
   }
 
-  async addOrder(orderDto: CreateOrderDto
-  ): Promise<Order> {
-    let totalPrice = 0;
-    const userId = orderDto.userId
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+  async addOrder(orderDto: CreateOrderDto): Promise<Order> {
+    const user = await this.userRepository.findOne({
+      where: { id: orderDto.userId },
+    });
+
     if (!user) {
-      throw new NotFoundException(`User with id ${userId} not found`);
+      throw new NotFoundException(`User with id ${orderDto.userId} not found`);
     }
-    const order = new Order();
-    order.date = new Date();
-    order.user = user;
-    order.status = status.PENDING
-    order.subsType = orderDto.preferedSub
-    
-    totalPrice = subsPrice[orderDto.preferedSub]
+
+    const totalPrice = subsPrice[orderDto.preferedSub] ?? 0;
+
+    const order = this.orderRepository.create({
+      date: new Date(),
+      user,
+      status: status.PENDING,
+      subsType: orderDto.preferedSub,
+    });
+
     const newOrder = await this.orderRepository.save(order);
-    
-    const orderDetail = new OrderDetail();
-    orderDetail.price = Number(totalPrice.toFixed(2));
-    orderDetail.order = newOrder;
-    orderDetail.startedAt = new Date()
-    orderDetail.endsAt = new Date()
-    
+
+    const orderDetail = this.orderDetailRepository.create({
+      price: parseFloat(totalPrice.toFixed(2)),
+      order: newOrder,
+      startedAt: new Date(),
+      endsAt: new Date(),
+    });
+
     await this.orderDetailRepository.save(orderDetail);
-    
-    const foundOrder = await this.orderRepository.findOne({where:
-      {id: newOrder.id}
-    })
-    if (!foundOrder) {
-      throw new NotFoundException(`Order with id ${newOrder.id} not found`);
-    }
+
     try {
-      const preference = await this.mercadopagoService.createPreference(totalPrice, order.id, user.email)
-      console.log(preference)
+      const preference = await this.mercadopagoService.createPreference(
+        totalPrice,
+        newOrder.id,
+        user.email,
+      );
+      console.log('MercadoPago Preference:', preference);
     } catch (error) {
-      throw new HttpException('Error al crear la preferencia de pago', HttpStatus.INTERNAL_SERVER_ERROR)
-  }
-
-    return foundOrder;
-  }
-
-  async updateStatus(orderid: string, newStatus: string){
-    const getOrder = await this.orderRepository.findOne({where:{id: orderid}})
-    if(!getOrder){
-      throw new NotFoundException(`Order with ID ${orderid} not found`)
+      throw new HttpException(
+        'Error al crear la preferencia de pago',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
-    if(newStatus === status.PAID){
-      getOrder.status = status.PAID
-    } else{
-      getOrder.status = status.NOT_PAID
-    }
-    await this.orderRepository.save(getOrder)
 
-    return `Order with id ${orderid} has been updated to ${newStatus}`
+    return this.getOrderById(newOrder.id); // Traer la orden con las relaciones
   }
 
+  async updateStatus(orderId: string, newStatus: string): Promise<string> {
+    const order = await this.orderRepository.findOne({ where: { id: orderId } });
+
+    if (!order) {
+      throw new NotFoundException(`Order with ID ${orderId} not found`);
+    }
+
+    order.status =
+      newStatus === status.PAID ? status.PAID : status.NOT_PAID;
+
+    await this.orderRepository.save(order);
+
+    return `Order with id ${orderId} has been updated to ${order.status}`;
+  }
 }
