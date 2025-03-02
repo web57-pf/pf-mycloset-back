@@ -6,11 +6,13 @@ import {
   Param,
   ParseUUIDPipe,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Order } from './entities/order.entity';
+import { AuthenticationGuard } from 'src/auth/guards/auth.guard';
 
 @ApiTags('order')
 @Controller('order')
@@ -19,6 +21,7 @@ export class OrderController {
 
   @ApiOperation({ summary: 'Creación de orden' })
   @ApiBody({ type: CreateOrderDto })
+  @UseGuards(AuthenticationGuard)
   @Post()
   async create(@Body() order: CreateOrderDto) {
     return await this.orderService.addOrder(order)
