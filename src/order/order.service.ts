@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -66,8 +66,13 @@ export class OrderService {
     if (!foundOrder) {
       throw new NotFoundException(`Order with id ${newOrder.id} not found`);
     }
-    const preference = await this.mercadopagoService.createPreference(totalPrice, order.id, user.email)
-    console.log(preference)
+    try {
+      const preference = await this.mercadopagoService.createPreference(totalPrice, order.id, user.email)
+      console.log(preference)
+    } catch (error) {
+      throw new HttpException('Error al crear la preferencia de pago', HttpStatus.INTERNAL_SERVER_ERROR)
+  }
+
     return foundOrder;
   }
 

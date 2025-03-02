@@ -29,10 +29,10 @@ export class MercadopagoService {
                 body: {
                     items,
                     back_urls: {
-                        success: '',
-                        failure: ''
+                        success: 'https://mycloset57.vercel.app/accepted',
+                        failure: 'https://mycloset57.vercel.app/denied'
                     },
-                    notification_url: 'https://pf-mycloset-back.onrender.com',
+                    notification_url: 'https://pf-mycloset-back.onrender.com/mercadopago/webhook',
                     metadata: {
                         orderId,
                         email

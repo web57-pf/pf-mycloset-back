@@ -41,7 +41,7 @@ export class MercadopagoController {
         const paymentId = queries.payment_id
         const payment = await this.mercadopagoService.getPaymentById(paymentId)
 
-        if (payment.status = 'approved') {
+        if (payment.status === 'approved') {
             const orderId = payment.metadata.orderId
             await this.ordersService.updateStatus(orderId, status.PAID)
             return {message: 'Suscripción aprobada'}
