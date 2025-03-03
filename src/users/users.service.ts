@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UsersService {
@@ -17,14 +18,30 @@ export class UsersService {
 
   async findOne(id: string) {
     const foundUser = await this.userRepository.findOne({where: {id: id}})
-    return `User with id: ${id} is ${foundUser} (not formatted) `;
+    if(!foundUser){
+      throw new NotFoundException(`User with id ${id} not found`)
+    }
+    return foundUser;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     const foundUser = await this.userRepository.findOne({where: {id: id}})
+    if(updateUserDto.password){
+      if(!updateUserDto.currentPassword){
+        throw new UnauthorizedException('Debe proporcionar la contraseña actual para cambiarla')
+      }
+      const passwordMatches = await bcrypt.compare(updateUserDto.currentPassword, foundUser.password)
+      if(!passwordMatches){
+        throw new UnauthorizedException('La contraseña actual es incorrecta')
+      }
+      const saltRounds = 10
+      const hashedPassword = await bcrypt.hash(updateUserDto.password, saltRounds)
+      updateUserDto = {...updateUserDto, password: hashedPassword}
+    } else {
+      updateUserDto = {...updateUserDto, password: undefined, currentPassword: undefined}
+    }
     Object.assign(foundUser, updateUserDto)
-    await this.userRepository.save(foundUser)
-    return `User with id: ${id} has been updated`;
+    return await this.userRepository.save(foundUser)
   }
 
   async remove(id: string) {

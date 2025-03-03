@@ -113,7 +113,8 @@ export class ClothesService {
     const query = this.clothesRepository
       .createQueryBuilder('clothes')
       .leftJoinAndSelect('clothes.category', 'category')
-      .leftJoinAndSelect('clothes.tags', 'tags');
+      .leftJoinAndSelect('clothes.tags', 'tags')
+      .where('clothes.isDeleted = :isDeleted', { isDeleted: false});
 
     if (categoryId) {
       query.andWhere('category.id = :categoryId', { categoryId });

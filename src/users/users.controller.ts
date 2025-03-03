@@ -26,7 +26,7 @@ export class UsersController {
   @ApiOperation({
     summary: 'get one user by id'
   })
-  @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @UseGuards(AuthenticationGuard, RolesGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -48,7 +48,7 @@ export class UsersController {
       }
     }
   })
-  @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @UseGuards(AuthenticationGuard, RolesGuard)
   @Put(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
