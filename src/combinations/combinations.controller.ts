@@ -12,7 +12,7 @@ export class CombinationsController {
     constructor(
         private readonly combinationsService: CombinationsService
     ){}
-    @UseGuards(AuthenticationGuard, SubscriptionGuard)
+    @UseGuards(AuthenticationGuard)
     @Post('create-combination')
     @ApiOperation({
         summary: 'Creates combination for user'
