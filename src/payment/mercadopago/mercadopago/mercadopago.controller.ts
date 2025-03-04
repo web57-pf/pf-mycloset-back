@@ -2,12 +2,15 @@ import { Controller, Get, HttpException, HttpStatus, Post, Query } from '@nestjs
 import { MercadopagoService } from './mercadopago.service';
 import { OrderService } from 'src/order/order.service';
 import { status } from 'src/order/enum/order-status';
+import { UsersService } from 'src/users/users.service';
+import { subsType } from 'src/users/enum/suscriptionType';
 
 @Controller('mercadopago')
 export class MercadopagoController {
     constructor(
         private readonly mercadopagoService: MercadopagoService,
         private readonly ordersService: OrderService,
+        private readonly userService: UsersService
         //relacion mailer
     ){}
 
@@ -21,6 +24,12 @@ export class MercadopagoController {
                 if(payment.status==='approved'){
                     const orderId = payment.metadata.orderId
                     await this.ordersService.updateStatus(orderId, status.PAID)
+                    const order = await this.ordersService.getOrderById(orderId)
+                    const user = await this.userService.usersByEmail(payment.metadata.email)
+                    if(['Free', 'Premium', 'Pro'].includes(order.subsType)){
+                        user.subscriptionType = order.subsType as subsType
+                        await this.userService.updateUser(user)
+                    }
                     //agregar relacion con mailer
                 } else{
                     console.log('No aprobado')

@@ -6,4 +6,5 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     readonly email?: string;
     readonly currentPassword?: string;
     readonly password?: string;
+    readonly subscriptionType?: string;
 }

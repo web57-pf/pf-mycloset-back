@@ -53,4 +53,10 @@ export class UsersService {
     await this.userRepository.save(foundUser)
     return `User with id: ${id} has been removed`
   }
+  async usersByEmail(email: string){
+    return await this.userRepository.findOneBy({email: email})
+  }
+  async updateUser(user: User): Promise<User> {
+    return this.userRepository.save(user);
+  }
 }

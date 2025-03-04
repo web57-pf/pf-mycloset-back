@@ -31,6 +31,10 @@ export class Order {
   @Column({default: status.PENDING})
   status: string
 
-  @Column({default: subsType.free})
+  @Column({
+    type: 'enum',
+    enum: subsType,
+    default: subsType.free,
+  })
   subsType: string
 }
