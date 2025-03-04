@@ -26,7 +26,7 @@ export class MercadopagoController {
                     await this.ordersService.updateStatus(orderId, status.PAID)
                     const order = await this.ordersService.getOrderById(orderId)
                     const user = await this.userService.usersByEmail(payment.metadata.email)
-                    if(['Free', 'Premium', 'Pro'].includes(order.subsType)){
+                    if(['free', 'premium', 'pro'].includes(order.subsType)){
                         user.subscriptionType = order.subsType as subsType
                         await this.userService.updateUser(user)
                     }

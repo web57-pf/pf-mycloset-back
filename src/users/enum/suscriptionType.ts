@@ -1,7 +1,7 @@
 export enum subsType {
-  free = 'Free',
-  premium = 'Premium',
-  pro = 'Pro',
+  free = 'free',
+  premium = 'premium',
+  pro = 'pro',
 }
 
 export const subsPrice = {
