@@ -16,6 +16,7 @@ export class MercadopagoController {
 
     @Post('webhook')
     async webhook(@Query() queries){
+        console.log(queries)
         try {
             if(queries.type === 'payment'){
                 const payment = await this.mercadopagoService.getPaymentById(
