@@ -38,8 +38,8 @@ export class MercadopagoService {
                         failure: 'https://mycloset57.vercel.app/denied'
                     },
                     notification_url: 'https://pf-mycloset-back.onrender.com/mercadopago/webhook',
+                    external_reference: orderId,
                     metadata: {
-                        orderId,
                         email
                     }
                 }
@@ -54,10 +54,15 @@ export class MercadopagoService {
 
     async getPaymentById(id: string){
         try{
-            const {status, status_detail, metadata} = await this.payment.get({
+            const payment = await this.payment.get({
                 id: id
-            })
-            return {status, status_detail, metadata}
+            });
+            const status = payment.status
+            const status_detail = payment.status_detail
+            const metadata = payment.metadata
+            const external_reference = payment.external_reference
+            // const {status, status_detail, metadata} = payment
+            return {status, status_detail, metadata, external_reference}
         } catch(error) {
             throw new BadRequestException('Error al obtener el pago')
         }

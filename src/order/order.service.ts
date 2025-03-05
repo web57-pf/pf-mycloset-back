@@ -12,7 +12,7 @@ import { OrderDetail } from 'src/order_detail/entities/order_detail.entity';
 import { status } from './enum/order-status';
 import { MercadopagoService } from 'src/payment/mercadopago/mercadopago/mercadopago.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { subsPrice } from 'src/users/enum/suscriptionType';
+import { subsPrice, subsType } from 'src/users/enum/suscriptionType';
 
 @Injectable()
 export class OrderService {
@@ -56,7 +56,7 @@ export class OrderService {
       date: new Date(),
       user,
       status: status.PENDING,
-      subsType: orderDto.preferedSub,
+      subsType: orderDto.preferedSub as subsType,
     });
 
     const newOrder = await this.orderRepository.save(order);
@@ -77,6 +77,7 @@ export class OrderService {
         user.email,
       );
       const orderId = await this.orderRepository.findOne({where:{id: newOrder.id}})
+      
       return {
         order: orderId,
         initPoint: preference.init_point,

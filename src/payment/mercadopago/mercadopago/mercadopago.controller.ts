@@ -23,7 +23,7 @@ export class MercadopagoController {
                     body['data.id'],
                 );
                 if (payment.status === 'approved') {
-                    const orderId = payment.metadata.orderId;
+                    const orderId = payment.external_reference
                     const order = await this.ordersService.getOrderById(orderId);
                     if(!order){
                         throw new NotFoundException('Order not found')
@@ -37,7 +37,7 @@ export class MercadopagoController {
                     //agregar relacion con mailer
                 } else {
                     console.log('Pago no aprobado');
-                    const orderId = payment.metadata.orderId;
+                    const orderId = payment.external_reference
                     await this.ordersService.updateStatus(orderId, status.NOT_PAID);
                     //mailer cancelado
                 }
@@ -58,7 +58,7 @@ export class MercadopagoController {
         const payment = await this.mercadopagoService.getPaymentById(paymentId)
 
         if (payment.status === 'approved') {
-            const orderId = payment.metadata.orderId
+            const orderId = payment.external_reference
             await this.ordersService.updateStatus(orderId, status.PAID)
             return {message: 'Suscripción aprobada'}
         } else {
