@@ -104,7 +104,7 @@ export class OrderService {
       newStatus === status.PAID ? status.PAID : status.NOT_PAID;
 
     await this.orderRepository.save(order);
-
+    console.log('Order status in update:', order.status)
     return `Order with id ${orderId} has been updated to ${order.status}`;
   }
 }

@@ -29,9 +29,11 @@ export class MercadopagoController {
                         throw new NotFoundException('Order not found')
                     }
                     await this.ordersService.updateStatus(order.id, status.PAID);
+                    console.log('Approved order:', order)
                     const user = await this.userService.usersByEmail(payment.metadata.email);
                     if (['free', 'premium', 'pro'].includes(order.subsType)) {
                         user.subscriptionType = order.subsType as subsType;
+                        console.log('User subscription type in mpcontroller:',user.subscriptionType)
                         await this.userService.updateUser(user);
                     }
                     //agregar relacion con mailer
@@ -39,6 +41,8 @@ export class MercadopagoController {
                     console.log('Pago no aprobado');
                     const orderId = payment.external_reference
                     await this.ordersService.updateStatus(orderId, status.NOT_PAID);
+                    const updatedOrder = await this.ordersService.getOrderById(orderId)
+                    console.log('Negative order: ',updatedOrder)
                     //mailer cancelado
                 }
             }
@@ -60,6 +64,8 @@ export class MercadopagoController {
         if (payment.status === 'approved') {
             const orderId = payment.external_reference
             await this.ordersService.updateStatus(orderId, status.PAID)
+            const updatedOrder = await this.ordersService.getOrderById(orderId)
+            console.log('Updated order in success: ', updatedOrder)
             return {message: 'Suscripción aprobada'}
         } else {
             return { message: 'Suscripción no aprobada'}
