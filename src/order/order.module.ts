@@ -20,5 +20,6 @@ import { contanst } from 'src/auth/jwt.contanst';
   ],
   controllers: [OrderController],
   providers: [OrderService, MercadopagoService],
+  exports: [OrderService]
 })
 export class OrderModule {}
