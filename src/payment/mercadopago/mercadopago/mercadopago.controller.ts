@@ -19,6 +19,8 @@ export class MercadopagoController {
         console.log('Webhook recibido:', body); // Verificar si los datos llegan correctamente
         try {
             if (body.type === 'payment') {
+                console.log('Body id: ', body.data.id)
+                console.log('Body:', body)
                 const payment = await this.mercadopagoService.getPaymentById(
                     body['data.id'],
                 );
