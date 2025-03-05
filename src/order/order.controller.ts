@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Put,
   UseGuards,
+  HttpException,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -32,10 +33,11 @@ export class OrderController {
     return this.orderService.getOrders();
   }
 
-  @ApiOperation({ summary: 'Obtener todas las ordenes' })
+  @ApiOperation({ summary: 'Obtener order por id' })
   @Get(':id')
-  getOrderById(@Param('id', ParseUUIDPipe) id: string) {
-    return this.orderService.getOrderById(id);
+  async getOrderById(@Param('id', ParseUUIDPipe) id: string) {
+    const order = await this.orderService.getOrderById(id); 
+    return order
   }
 
   @Put(':orderId')

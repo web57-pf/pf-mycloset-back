@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Post, Query } from '@nestjs/common';
 import { MercadopagoService } from './mercadopago.service';
 import { OrderService } from 'src/order/order.service';
 import { status } from 'src/order/enum/order-status';
@@ -24,8 +24,11 @@ export class MercadopagoController {
                 );
                 if (payment.status === 'approved') {
                     const orderId = payment.metadata.orderId;
-                    await this.ordersService.updateStatus(orderId, status.PAID);
                     const order = await this.ordersService.getOrderById(orderId);
+                    if(!order){
+                        throw new NotFoundException('Order not found')
+                    }
+                    await this.ordersService.updateStatus(order.id, status.PAID);
                     const user = await this.userService.usersByEmail(payment.metadata.email);
                     if (['free', 'premium', 'pro'].includes(order.subsType)) {
                         user.subscriptionType = order.subsType as subsType;
