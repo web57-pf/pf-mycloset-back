@@ -8,9 +8,17 @@ import { OrderService } from "src/order/order.service";
 import { UsersService } from "src/users/users.service";
 import { OrderModule } from "src/order/order.module";
 import { UsersModule } from "src/users/users.module";
+import { JwtModule } from "@nestjs/jwt";
+import { contanst } from "src/auth/jwt.contanst";
 
 @Module({
-    imports: [OrderModule, UsersModule],
+    imports: [
+        JwtModule.register({
+              secret: contanst.secret,
+              signOptions:{ expiresIn: '1h'}
+        }),
+        OrderModule, 
+        UsersModule],
     controllers: [MercadopagoController],
     providers: [MercadopagoService],
     exports: [MercadopagoService]

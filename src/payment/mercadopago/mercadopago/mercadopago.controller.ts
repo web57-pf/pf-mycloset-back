@@ -1,21 +1,23 @@
-import { Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Post, Query, Res } from '@nestjs/common';
 import { MercadopagoService } from './mercadopago.service';
 import { OrderService } from 'src/order/order.service';
 import { status } from 'src/order/enum/order-status';
 import { UsersService } from 'src/users/users.service';
 import { subsType } from 'src/users/enum/suscriptionType';
+import { Response } from 'express';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('mercadopago')
 export class MercadopagoController {
     constructor(
         private readonly mercadopagoService: MercadopagoService,
         private readonly ordersService: OrderService,
-        private readonly userService: UsersService
-        //relacion mailer
+        private readonly userService: UsersService,
+        private readonly jwtService: JwtService
     ){}
 
     @Post('webhook')
-    async webhook(@Body() body) {
+    async webhook(@Body() body, @Res({passthrough: true}) res: Response) {
         console.log('Webhook recibido:', body); // Verificar si los datos llegan correctamente
         try {
             if (body.type === 'payment') {
@@ -37,6 +39,27 @@ export class MercadopagoController {
                         user.subscriptionType = order.subsType as subsType;
                         console.log('User subscription type in mpcontroller:',user.subscriptionType)
                         await this.userService.updateUser(user);
+
+                        //Refres token
+                        const payload = {
+                            id: user.id,
+                            email: user.email,
+                            subscriptionType: user.subscriptionType,
+                            roles: user.isAdmin,
+                        }
+
+                        const newToken = this.jwtService.sign(payload)
+
+                        //Update cookie new token
+                        res.cookie('token', newToken, {
+                            httpOnly: true, 
+                            secure: true, 
+                            // sameSite: 'lax',
+                            sameSite: 'none',
+                            maxAge: 1000 * 60 * 60 * 24 * 1, 
+                          });
+                          
+                         return {status: 'OK'}
                     }
                     //agregar relacion con mailer
                 } else {
