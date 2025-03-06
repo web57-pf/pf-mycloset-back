@@ -22,7 +22,7 @@ export class MercadopagoController {
                 console.log('Body id: ', body.data.id)
                 console.log('Body:', body)
                 const payment = await this.mercadopagoService.getPaymentById(
-                    body['data.id'],
+                    body.data.id,
                 );
                 if (payment.status === 'approved') {
                     const orderId = payment.external_reference

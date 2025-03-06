@@ -57,13 +57,14 @@ export class MercadopagoService {
             const payment = await this.payment.get({
                 id: id
             });
-            const status = payment.status
-            const status_detail = payment.status_detail
-            const metadata = payment.metadata
-            const external_reference = payment.external_reference
-            // const {status, status_detail, metadata} = payment
-            return {status, status_detail, metadata, external_reference}
+            return {
+                status: payment.status,
+                status_detail: payment.status_detail,
+                metadata: payment.metadata,
+                external_reference: payment.external_reference,
+            };
         } catch(error) {
+            console.log('Error: ',error)
             throw new BadRequestException('Error al obtener el pago')
         }
     }
