@@ -1,27 +1,21 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { CategoryModule } from './category/category.module';
-// import { OrderModule } from './order/order.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostgresDataSourceConfig } from './config/data-source';
 import { ClothesModule } from './clothes/clothes.module';
 import { OrderDetailModule } from './order_detail/order_detail.module';
-
-import { EmailModule } from './email/email.module';
 // import { FileUploadModule } from './file-upload/file-upload.module';
 import { ScheduleModule } from '@nestjs/schedule';
-// import { CronModule } from './cron/cron.module';
-import { OrderModule } from './order/order.module';
-
 import { CombinationsModule } from './combinations/combinations.module';
 import { TagsModule } from './tags/tags.module';
 import { MercadopagoModule } from './payment/mercadopago/mercadopago/mercadopago.module';
 import { JwtModule } from '@nestjs/jwt';
 import { contanst } from './auth/jwt.contanst';
 import { AdminModule } from './admin/admin.module';
-
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -44,14 +38,9 @@ import { AdminModule } from './admin/admin.module';
     ClothesModule,
     OrderDetailModule,
     MercadopagoModule,
-
-    EmailModule,
-    // CronModule,
-
     CombinationsModule,
     TagsModule,
     AdminModule,
-
   ],
   controllers: [],
   providers: [],
