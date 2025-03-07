@@ -16,6 +16,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { contanst } from './auth/jwt.contanst';
 import { AdminModule } from './admin/admin.module';
 import { OrderModule } from './order/order.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { OrderModule } from './order/order.module';
     CombinationsModule,
     TagsModule,
     AdminModule,
+    EmailModule,
   ],
   controllers: [],
   providers: [],
