@@ -12,12 +12,25 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>
   ){}
+  
+  
   async findAll() {
-    return this.userRepository.find()
+    return this.userRepository.find({
+      relations: {
+        clothes: true,
+        combinations: true
+      }
+    })
   }
 
   async findOne(id: string) {
-    const foundUser = await this.userRepository.findOne({where: {id: id}})
+    const foundUser = await this.userRepository.findOne({
+      where: {id: id}, 
+      relations: {
+        clothes: true,
+        combinations: true
+      }
+    })
     if(!foundUser){
       throw new NotFoundException(`User with id ${id} not found`)
     }

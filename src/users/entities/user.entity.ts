@@ -28,7 +28,11 @@ export class User {
     @Column({type: "boolean", default: false})
     isAdmin: boolean
 
-    @Column({default: subsType.free})
+    @Column({
+        type: "enum",
+        enum: subsType,  
+        default: subsType.free, 
+    })
     subscriptionType: subsType
 
     @OneToMany(() => Clothes, (clothes) => clothes.user)

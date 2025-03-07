@@ -1,9 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { categorySeeder } from './seeder/category.seeder';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
+import { Roles } from 'src/auth/roles.decorator';
+import { Role } from 'src/auth/roles.enum';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { AuthenticationGuard } from 'src/auth/guards/auth.guard';
 
 @Controller('category')
 export class CategoryController {
@@ -25,11 +29,13 @@ export class CategoryController {
     examples: {
       Category: {
         value: {
-          name: '',
+          name: 'Sueters',
         }
       }
     }
   })
+  @Roles(Role.USER, Role.ADMIN)
+  @UseGuards(AuthenticationGuard, RolesGuard)
   @Post()
   async create(@Body() createCategoryDto: CreateCategoryDto) {
     return await this.categoryService.create(createCategoryDto);
@@ -38,6 +44,8 @@ export class CategoryController {
   @ApiOperation({
     summary: 'Get all categories'
   })
+  @Roles(Role.USER, Role.ADMIN)
+  @UseGuards(AuthenticationGuard, RolesGuard)
   @Get()
   async findAll() {
     return await this.categoryService.findAll();
@@ -46,6 +54,8 @@ export class CategoryController {
   @ApiOperation({
     summary: 'Get one category by id'
   })
+  @Roles(Role.USER, Role.ADMIN)
+  @UseGuards(AuthenticationGuard, RolesGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.categoryService.findOne(id);
@@ -64,6 +74,8 @@ export class CategoryController {
       }
     }
   })
+  @Roles(Role.USER, Role.ADMIN)
+  @UseGuards(AuthenticationGuard, RolesGuard)
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
     return await this.categoryService.update(id, updateCategoryDto);
@@ -72,6 +84,8 @@ export class CategoryController {
   @ApiOperation({
     summary: 'Deletes category by id'
   })
+  @Roles(Role.USER, Role.ADMIN)
+  @UseGuards(AuthenticationGuard, RolesGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.categoryService.remove(id);

@@ -18,6 +18,9 @@ import { OrderModule } from './order/order.module';
 import { CombinationsModule } from './combinations/combinations.module';
 import { TagsModule } from './tags/tags.module';
 import { MercadopagoModule } from './payment/mercadopago/mercadopago/mercadopago.module';
+import { JwtModule } from '@nestjs/jwt';
+import { contanst } from './auth/jwt.contanst';
+import { AdminModule } from './admin/admin.module';
 
 
 @Module({
@@ -47,6 +50,7 @@ import { MercadopagoModule } from './payment/mercadopago/mercadopago/mercadopago
 
     CombinationsModule,
     TagsModule,
+    AdminModule,
 
   ],
   controllers: [],
