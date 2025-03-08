@@ -1,68 +1,172 @@
-import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import * as nodemailer from 'nodemailer';
+import { ConfigService } from '@nestjs/config';
+import { CreateEmailDto } from './dto/create-email.dto';
 
 @Injectable()
 export class EmailService {
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(private readonly configService: ConfigService) {}
 
-  async sendConfirmationEmail(user: string, email: string) {
-    const url = ``;
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Confirm your email',
-      template: './confirm.email',
-      context: {
-        name: user,
-        url,
+  emailTransporter() {
+    const transporter = nodemailer.createTransport({
+      host: this.configService.get<string>('MAIL_HOST'),
+      port: this.configService.get<number>('MAIL_PORT'),
+      secure: false,
+      auth: {
+        user: this.configService.get<string>('MAIL_USER'),
+        pass: this.configService.get<string>('MAIL_PASSWORD'),
       },
     });
+    return transporter;
   }
 
-  async sendWelcomeEmail(user: string, email: string) {
-    const url = ``;
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Welcome to our app',
-      template: './welcome',
-      context: {
-        name: user,
-        url,
-      },
-    });
+  async sendConfirmationEmail(dto: CreateEmailDto) {
+    const { to, subject, template, html } = dto;
+
+    const transport = this.emailTransporter();
+
+    const options: nodemailer.SendMailOptions = {
+      from: this.configService.get<string>('MAIL_FROM'),
+      to: to,
+      subject: subject,
+      text: template,
+      html: html,
+    };
+    try {
+      await transport.sendMail(options);
+      console.log('Correo de confirmación enviado correctamente');
+    } catch (error) {
+      console.log('Error al enviar el correo de confirmación', error);
+    }
   }
 
-  async sendResetPasswordEmail(user: string, email: string) {
-    const url = ``;
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Reset your password',
-      template: './reset.password',
-      context: {
-        name: user,
-        url,
-      },
-    });
+  async sendEmailWelcome(dto: CreateEmailDto) {
+    const { to, subject, template, html } = dto;
+
+    const transport = this.emailTransporter();
+
+    const options: nodemailer.SendMailOptions = {
+      from: this.configService.get<string>('MAIL_FROM'),
+      to: to,
+      subject: subject,
+      text: template,
+      html: html,
+    };
+    try {
+      await transport.sendMail(options);
+      console.log('Correo de bienvenida enviado correctamente');
+    } catch (error) {
+      console.log('Error al enviar el correo de bienvenida', error);
+    }
   }
 
-  async sendSubscriptionEmail(user: string, email: string) {
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Subscription Confirmation',
-      template: './subscription.confirm',
-      context: {
-        name: user,
-      },
-    });
+  async sendEmailResetPassword(dto: CreateEmailDto) {
+    const { to, subject, template, html } = dto;
+
+    const transport = this.emailTransporter();
+
+    const options: nodemailer.SendMailOptions = {
+      from: this.configService.get<string>('MAIL_FROM'),
+      to: to,
+      subject: subject,
+      text: template,
+      html: html,
+    };
+    try {
+      await transport.sendMail(options);
+      console.log(
+        'Correo de restablecimiento de contraseña enviado correctamente',
+      );
+    } catch (error) {
+      console.log(
+        'Error al enviar el correo de restablecimiento de contraseña',
+        error,
+      );
+    }
   }
 
-  async sendCancelSubscriptionEmail(user: string, email: string) {
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Subscription Cancellation',
-      template: './cancel.subscription',
-      context: {
-        name: user,
-      },
-    });
+  async sendEmailSubscription(dto: CreateEmailDto) {
+    const { to, subject, template, html } = dto;
+
+    const transport = this.emailTransporter();
+
+    const options: nodemailer.SendMailOptions = {
+      from: this.configService.get<string>('MAIL_FROM'),
+      to: to,
+      subject: subject,
+      text: template,
+      html: html,
+    };
+    try {
+      await transport.sendMail(options);
+      console.log('Correo de suscripción enviado correctamente');
+    } catch (error) {
+      console.log('Error al enviar el correo de suscripción', error);
+    }
+  }
+
+  async sendEmailCancellation(dto: CreateEmailDto) {
+    const { to, subject, template, html } = dto;
+
+    const transport = this.emailTransporter();
+
+    const options: nodemailer.SendMailOptions = {
+      from: this.configService.get<string>('MAIL_FROM'),
+      to: to,
+      subject: subject,
+      text: template,
+      html: html,
+    };
+    try {
+      await transport.sendMail(options);
+      console.log('Correo de cancelación enviado correctamente');
+    } catch (error) {
+      console.log('Error al enviar el correo de cancelación', error);
+    }
+  }
+
+  async sendEmailNotification(dto: CreateEmailDto) {
+    const { to, subject, template, html } = dto;
+
+    const transport = this.emailTransporter();
+
+    const options: nodemailer.SendMailOptions = {
+      from: this.configService.get<string>('MAIL_FROM'),
+      to: to,
+      subject: subject,
+      text: template,
+      html: html,
+    };
+    try {
+      await transport.sendMail(options);
+      console.log('Correo de notificación enviado correctamente');
+    } catch (error) {
+      console.log('Error al enviar el correo de notificación', error);
+    }
+  }
+
+  async sendEmailConfirmSubscription(dto: CreateEmailDto) {
+    const { to, subject, template, html } = dto;
+
+    const transport = this.emailTransporter();
+
+    const options: nodemailer.SendMailOptions = {
+      from: this.configService.get<string>('MAIL_FROM'),
+      to: to,
+      subject: subject,
+      text: template,
+      html: html,
+    };
+    try {
+      await transport.sendMail(options);
+      console.log(
+        'Correo de confirmación de suscripción enviado correctamente',
+      );
+    } catch (error) {
+      console.log(
+        'Error al enviar el correo de confirmación de suscripción',
+        error,
+      );
+    }
   }
 }
