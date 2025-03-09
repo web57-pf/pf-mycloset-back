@@ -18,6 +18,7 @@ import { OrderModule } from './order/order.module';
 import { CombinationsModule } from './combinations/combinations.module';
 import { TagsModule } from './tags/tags.module';
 import { MercadopagoModule } from './payment/mercadopago/mercadopago/mercadopago.module';
+import { WeatherModule } from './weather/weather.module';
 
 
 @Module({
@@ -47,6 +48,7 @@ import { MercadopagoModule } from './payment/mercadopago/mercadopago/mercadopago
 
     CombinationsModule,
     TagsModule,
+    WeatherModule,
 
   ],
   controllers: [],
