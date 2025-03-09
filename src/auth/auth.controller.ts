@@ -14,7 +14,6 @@ import { Request, Response } from 'express';
 import { AuthenticationGuard } from './guards/auth.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation } from '@nestjs/swagger';
-import { CreateEmailDto } from 'src/email/dto/create-email.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -26,14 +25,7 @@ export class AuthController {
   })
   @Post('signup')
   async signup(@Body() data: SignupDTO) {
-    const user = await this.authService.signupServices(data);
-
-    const emailDto: CreateEmailDto = {
-      to: [user.email],
-      subject: 'Confimación de registro',
-      html: `<h1>Gracias por registrarte en MyCloset</h1>`,
-      type: 'confirmation',
-    };
+    return await this.authService.signupServices(data);
   }
 
   @ApiOperation({ summary: 'Inciar session', description: 'Iniciar session' })
