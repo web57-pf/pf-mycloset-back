@@ -6,7 +6,7 @@ import { WeatherService } from './weather.service';
 export class WeatherController {
   constructor(private readonly weatherService: WeatherService) {}
   @Get()
-  getWeather(@Query('lat') lat: string, @Query('lon') lon: string) {
+  getWeather(@Query('lat') lat: number, @Query('lon') lon: number) {
     return this.weatherService.getWeather(lat, lon);
   }
 }
