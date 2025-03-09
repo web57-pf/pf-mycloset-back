@@ -7,5 +7,6 @@ import { EmailController } from './email.controller';
   imports: [ConfigModule.forRoot()],
   controllers: [EmailController],
   providers: [EmailService],
+  exports: [EmailService],
 })
 export class EmailModule {}

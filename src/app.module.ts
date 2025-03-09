@@ -17,6 +17,8 @@ import { contanst } from './auth/jwt.contanst';
 import { AdminModule } from './admin/admin.module';
 import { OrderModule } from './order/order.module';
 import { EmailModule } from './email/email.module';
+import { CronJobService } from './cron/cron.service';
+import { CronModule } from './cron/cron.module';
 
 @Module({
   imports: [
@@ -43,6 +45,7 @@ import { EmailModule } from './email/email.module';
     TagsModule,
     AdminModule,
     EmailModule,
+    CronModule,
   ],
   controllers: [],
   providers: [],

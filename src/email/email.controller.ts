@@ -1,62 +1,13 @@
-// import { Body, Controller, Post } from '@nestjs/common';
-// import { EmailService } from './email.service';
-// import { CreateEmailDto } from './dto/create-email.dto';
-
-// @Controller('email')
-// export class EmailController {
-//   constructor(private readonly emailService: EmailService) {}
-
-//   @Post('send')
-//   async sendEmail(@Body() dto: CreateEmailDto) {
-//     await this.emailService.sendConfirmationEmail(dto);
-//     return { message: 'Email sent' };
-//   }
-
-//   @Post('send-welcome')
-//   async sendEmailWelcome(@Body() dto: CreateEmailDto) {
-//     await this.emailService.sendEmailWelcome(dto);
-//     return { message: 'Email sent' };
-//   }
-
-//   @Post('send-reset-password')
-//   async sendResetPassword(@Body() dto: CreateEmailDto) {
-//     await this.emailService.sendEmailResetPassword(dto);
-//     return { message: 'Email sent' };
-//   }
-
-//   @Post('send-Notification')
-//   async sendNotification(@Body() dto: CreateEmailDto) {
-//     await this.emailService.sendEmailNotification(dto);
-//     return { message: 'Email sent' };
-//   }
-
-//   @Post('send-activation')
-//   async sendActivation(@Body() dto: CreateEmailDto) {
-//     await this.emailService.sendEmailConfirmSubscription(dto);
-//     return { message: 'Email sent' };
-//   }
-
-//   @Post('send-subscription')
-//   async sendSubscription(@Body() dto: CreateEmailDto) {
-//     await this.emailService.sendEmailSubscription(dto);
-//     return { message: 'Email sent' };
-//   }
-
-//   @Post('send-cancel-subscription')
-//   async sendCancelSubscription(@Body() dto: CreateEmailDto) {
-//     await this.emailService.sendEmailCancellation(dto);
-//     return { message: 'Email sent' };
-//   }
-// }
-
 import { Body, Controller, Post } from '@nestjs/common';
 import { EmailService } from './email.service';
 import { CreateEmailDto } from './dto/create-email.dto';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('email')
 export class EmailController {
   constructor(private readonly emailService: EmailService) {}
 
+  @ApiOperation({ summary: 'Enviar email' })
   @Post('send')
   async sendEmail(@Body() dto: CreateEmailDto) {
     switch (dto.type) {

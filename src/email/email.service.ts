@@ -10,14 +10,11 @@ export class EmailService {
   private transporter: nodemailer.Transporter;
 
   constructor() {
-    console.log(process.env.EMAIL_USER);
-    console.log(process.env.EMAIL_PASS);
-
     this.transporter = nodemailer.createTransport({
-      service: 'gmail', // Puedes usar otro servicio SMTP
+      service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER || 'henrypf057@gmail.com', // Usa variables de entorno
-        pass: process.env.EMAIL_PASS || 'nljx irap njdg xrao', // Usa variables de entorno
+        user: process.env.EMAIL_USER || 'henrypf057@gmail.com',
+        pass: process.env.EMAIL_PASS || 'nljx irap njdg xrao',
       },
     });
   }
