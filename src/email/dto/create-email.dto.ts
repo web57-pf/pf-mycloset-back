@@ -13,7 +13,7 @@ export class CreateEmailDto {
     example: ['mail@mail.com'],
   })
   @IsEmail({}, { each: true })
-  to: string[];
+  email: string;
 
   @ApiProperty({
     description: 'Asunto del correo',

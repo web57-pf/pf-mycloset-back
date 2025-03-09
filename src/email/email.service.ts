@@ -29,7 +29,7 @@ export class EmailService {
   }
 
   private async sendEmail(dto: CreateEmailDto, templateName: string) {
-    const { to, subject, html } = dto;
+    const { email, subject, html } = dto;
 
     // Renderizamos la plantilla Handlebars
     const templatePath = path.resolve(
@@ -43,16 +43,14 @@ export class EmailService {
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: to.join(','),
+      to: email,
       subject,
       html: htmlContent, // Aquí usamos el HTML generado por Handlebars
     };
 
     try {
       await this.transporter.sendMail(mailOptions);
-      console.log(
-        `Correo de tipo "${templateName}" enviado a: ${to.join(', ')}`,
-      );
+      console.log(`Correo de tipo "${templateName}" enviado a: ${email}`);
     } catch (error) {
       console.error(
         `Error al enviar el correo de tipo "${templateName}":`,

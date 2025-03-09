@@ -29,7 +29,7 @@ export class CronJobService {
 
         // Crear el DTO para el correo de expiración
         const emailDto: CreateEmailDto = {
-          to: [user.email], // Dirección del usuario
+          email: user.email, // Dirección del usuario
           subject: 'Tu suscripción está por vencer',
           html: `
             <p>Estimado/a ${user.name},</p>

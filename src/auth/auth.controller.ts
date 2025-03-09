@@ -14,10 +14,15 @@ import { Request, Response } from 'express';
 import { AuthenticationGuard } from './guards/auth.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation } from '@nestjs/swagger';
+import { EmailService } from 'src/email/email.service';
+import { CreateEmailDto } from 'src/email/dto/create-email.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly emailService: EmailService,
+  ) {}
 
   @ApiOperation({
     summary: 'Registrar usuario',
@@ -25,6 +30,15 @@ export class AuthController {
   })
   @Post('signup')
   async signup(@Body() data: SignupDTO) {
+    const emailDto: CreateEmailDto = {
+      email: data.email, // Asegurar que 'to' sea un array
+      subject: 'Bienvenido a nuestra plataforma',
+      html: `<p>Hola ${data.name}, gracias por registrarte. Confirma tu correo electrónico.</p>`,
+      type: 'confirmation',
+    };
+
+    await this.emailService.sendConfirmationEmail(emailDto); // Pasamos un CreateEmailDto válido
+
     return await this.authService.signupServices(data);
   }
 
