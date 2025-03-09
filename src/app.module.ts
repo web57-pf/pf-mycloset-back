@@ -17,7 +17,7 @@ import { contanst } from './auth/jwt.contanst';
 import { AdminModule } from './admin/admin.module';
 import { OrderModule } from './order/order.module';
 import { EmailModule } from './email/email.module';
-import { CronJobService } from './cron/cron.service';
+import { WeatherModule } from './weather/weather.module';
 import { CronModule } from './cron/cron.module';
 
 @Module({
@@ -43,6 +43,7 @@ import { CronModule } from './cron/cron.module';
     MercadopagoModule,
     CombinationsModule,
     TagsModule,
+    WeatherModule,
     AdminModule,
     EmailModule,
     CronModule,
