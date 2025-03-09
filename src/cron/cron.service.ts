@@ -15,7 +15,7 @@ export class CronJobService {
 
   // Método para ejecutar el cron job
   sendSubscriptionReminderEmails() {
-    cron.schedule('* * * * *', async () => {
+    cron.schedule('0 0 * * *', async () => {
       // Esto se ejecuta todos los días a las 12 AM
       console.log('Enviando recordatorios de suscripción...');
 
