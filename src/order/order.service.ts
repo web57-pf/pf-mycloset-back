@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -61,11 +62,26 @@ export class OrderService {
 
     const newOrder = await this.orderRepository.save(order);
 
+    const now = new Date();
+    let endDate: Date
+
+    if (orderDto.preferedSub === 'premium') {
+      // Si es premium, la fecha de finalización es un mes después
+      endDate = new Date(now.setMonth(now.getMonth() + 1));
+    } else if (orderDto.preferedSub === 'pro') {
+      // Si es pro, la fecha de finalización es un año después
+      endDate = new Date(now.setFullYear(now.getFullYear() + 1));
+    } else {
+      // Si el tipo no es reconocido, podrías lanzar un error o asignar un valor por defecto
+      throw new BadRequestException('Invalid subscription type');
+    }
+
+    // Crear el detalle de la orden con las fechas correctas
     const orderDetail = this.orderDetailRepository.create({
       price: Number(orderDto.price),
       order: newOrder,
-      startedAt: new Date(),
-      endsAt: new Date(),
+      startedAt: new Date(),  // La fecha de inicio es el momento actual
+      endsAt: endDate,        // La fecha de fin es la calculada
     });
 
     await this.orderDetailRepository.save(orderDetail);

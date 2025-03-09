@@ -6,11 +6,11 @@ export class EmailService {
   constructor(private readonly mailerService: MailerService) {}
 
   async sendConfirmationEmail(user: string, email: string) {
-    const url = `http://localhost:3000/auth/confirm`;
+    const url = ``;
     await this.mailerService.sendMail({
       to: email,
       subject: 'Confirm your email',
-      template: './confirmation',
+      template: './confirm.email',
       context: {
         name: user,
         url,
@@ -19,11 +19,11 @@ export class EmailService {
   }
 
   async sendWelcomeEmail(user: string, email: string) {
-    const url = `http://localhost:3000/auth/login`;
+    const url = ``;
     await this.mailerService.sendMail({
       to: email,
       subject: 'Welcome to our app',
-      template: './welcome.email',
+      template: './welcome',
       context: {
         name: user,
         url,
@@ -32,7 +32,7 @@ export class EmailService {
   }
 
   async sendResetPasswordEmail(user: string, email: string) {
-    const url = `http://localhost:3000/auth/reset-password`;
+    const url = ``;
     await this.mailerService.sendMail({
       to: email,
       subject: 'Reset your password',
@@ -49,17 +49,6 @@ export class EmailService {
       to: email,
       subject: 'Subscription Confirmation',
       template: './subscription.confirm',
-      context: {
-        name: user,
-      },
-    });
-  }
-
-  async sendCancellationEmail(user: string, email: string) {
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'cancel.email',
-      template: './cancel',
       context: {
         name: user,
       },
