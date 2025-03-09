@@ -7,21 +7,21 @@ dotenv.config({
 });
 
 const PostgresDataSourceOptions: DataSourceOptions = {
-    type: 'postgres',
-    host: process.env.DATABASE_HOST,
-    port: parseInt(process.env.DATABASE_PORT, 10),
-    username: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
-    ssl: {
-     rejectUnauthorized: true ,
-    } ,
-    entities: ['dist/**/*.entity{.ts,.js}'],
-    synchronize: true,
-    logging: false,
-    migrations: ['dist/migration/*{.ts,.js}'],
-    dropSchema: false,
-}
+  type: 'postgres',
+  host: process.env.DATABASE_HOST,
+  port: parseInt(process.env.DATABASE_PORT, 10),
+  username: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_NAME,
+  ssl: {
+    rejectUnauthorized: true,
+  },
+  entities: ['dist/**/*.entity{.ts,.js}'],
+  synchronize: true,
+  logging: false,
+  migrations: ['dist/migration/*{.ts,.js}'],
+  dropSchema: false,
+};
 
 export const PostgresDataSourceConfig = registerAs(
   'postgres',
