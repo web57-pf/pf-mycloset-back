@@ -30,14 +30,14 @@ export class AuthController {
   })
   @Post('signup')
   async signup(@Body() data: SignupDTO) {
-    const emailDto: CreateEmailDto = {
-      email: data.email, // Asegurar que 'to' sea un array
-      subject: 'Bienvenido a nuestra plataforma',
-      html: `<p>Hola ${data.name}, gracias por registrarte. Confirma tu correo electrónico.</p>`,
-      type: 'confirmation',
-    };
+    // const emailDto: CreateEmailDto = {
+    //   email: data.email,
+    //   subject: 'Bienvenido a nuestra plataforma',
+    //   html: `<p>Hola ${data.name}, gracias por registrarte. Confirma tu correo electrónico.</p>`,
+    //   type: 'confirmation',
+    // };
 
-    await this.emailService.sendConfirmationEmail(emailDto); // Pasamos un CreateEmailDto válido
+    // await this.emailService.sendEmailWelcome(emailDto); // Pasamos un CreateEmailDto válido
 
     return await this.authService.signupServices(data);
   }
