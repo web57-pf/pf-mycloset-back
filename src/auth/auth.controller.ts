@@ -30,6 +30,7 @@ export class AuthController {
   })
   @Post('signup')
   async signup(@Body() data: SignupDTO) {
+    return await this.authService.signupServices(data);
     // const emailDto: CreateEmailDto = {
     //   email: data.email,
     //   subject: 'Bienvenido a nuestra plataforma',
@@ -38,8 +39,6 @@ export class AuthController {
     // };
 
     // await this.emailService.sendEmailWelcome(emailDto); // Pasamos un CreateEmailDto válido
-
-    await this.authService.signupServices(data);
   }
 
   @ApiOperation({ summary: 'Inciar session', description: 'Iniciar session' })
