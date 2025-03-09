@@ -66,19 +66,19 @@ export class EmailController {
       case 'welcome':
         await this.emailService.sendEmailWelcome(dto);
         break;
-      case 'reset-password':
+      case 'reset.password':
         await this.emailService.sendEmailResetPassword(dto);
         break;
       case 'notification':
         await this.emailService.sendEmailNotification(dto);
         break;
-      case 'activation':
+      case 'confirm':
         await this.emailService.sendEmailConfirmSubscription(dto);
         break;
-      case 'subscription':
+      case 'subscription.confirm':
         await this.emailService.sendEmailSubscription(dto);
         break;
-      case 'cancel-subscription':
+      case 'cancel.subscription':
         await this.emailService.sendEmailCancellation(dto);
         break;
       default:

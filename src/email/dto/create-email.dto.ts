@@ -14,10 +14,6 @@ export class CreateEmailDto {
   @IsString()
   subject: string;
 
-  @IsNotEmpty()
-  @IsString()
-  template: string;
-
   @IsOptional()
   @IsString()
   html?: string;
@@ -27,11 +23,11 @@ export class CreateEmailDto {
   @IsIn([
     'confirmation',
     'welcome',
-    'reset-password',
+    'reset.password',
     'notification',
-    'activation',
+    'subscription.confirm',
     'subscription',
-    'cancel-subscription',
+    'cancel.subscription',
   ])
   type: string;
 }

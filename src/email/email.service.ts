@@ -1,172 +1,85 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
-import { ConfigService } from '@nestjs/config';
+import * as path from 'path';
+import * as handlebars from 'handlebars';
+import * as fs from 'fs';
 import { CreateEmailDto } from './dto/create-email.dto';
 
 @Injectable()
 export class EmailService {
-  constructor(private readonly configService: ConfigService) {}
+  private transporter: nodemailer.Transporter;
 
-  emailTransporter() {
-    const transporter = nodemailer.createTransport({
-      host: this.configService.get<string>('MAIL_HOST'),
-      port: this.configService.get<number>('MAIL_PORT'),
-      secure: false,
+  constructor() {
+    console.log(process.env.EMAIL_USER);
+    console.log(process.env.EMAIL_PASS);
+
+    this.transporter = nodemailer.createTransport({
+      service: 'gmail', // Puedes usar otro servicio SMTP
       auth: {
-        user: this.configService.get<string>('MAIL_USER'),
-        pass: this.configService.get<string>('MAIL_PASSWORD'),
+        user: process.env.EMAIL_USER || 'henrypf057@gmail.com', // Usa variables de entorno
+        pass: process.env.EMAIL_PASS || 'nljx irap njdg xrao', // Usa variables de entorno
       },
     });
-    return transporter;
+  }
+
+  private async sendEmail(dto: CreateEmailDto, templateName: string) {
+    const { to, subject, html } = dto;
+
+    // Renderizamos la plantilla Handlebars
+    const templatePath = path.resolve(
+      __dirname,
+      'templates',
+      `${templateName}.hbs`,
+    );
+    const templateSource = fs.readFileSync(templatePath, 'utf-8');
+    const compiledTemplate = handlebars.compile(templateSource);
+    const htmlContent = compiledTemplate(dto); // Renderizamos el HTML con los datos del DTO
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: to.join(','),
+      subject,
+      html: htmlContent, // Aquí usamos el HTML generado por Handlebars
+    };
+
+    try {
+      await this.transporter.sendMail(mailOptions);
+      console.log(
+        `Correo de tipo "${templateName}" enviado a: ${to.join(', ')}`,
+      );
+    } catch (error) {
+      console.error(
+        `Error al enviar el correo de tipo "${templateName}":`,
+        error,
+      );
+    }
   }
 
   async sendConfirmationEmail(dto: CreateEmailDto) {
-    const { to, subject, template, html } = dto;
-
-    const transport = this.emailTransporter();
-
-    const options: nodemailer.SendMailOptions = {
-      from: this.configService.get<string>('MAIL_FROM'),
-      to: to,
-      subject: subject,
-      text: template,
-      html: html,
-    };
-    try {
-      await transport.sendMail(options);
-      console.log('Correo de confirmación enviado correctamente');
-    } catch (error) {
-      console.log('Error al enviar el correo de confirmación', error);
-    }
+    await this.sendEmail(dto, 'confirmation');
   }
 
   async sendEmailWelcome(dto: CreateEmailDto) {
-    const { to, subject, template, html } = dto;
-
-    const transport = this.emailTransporter();
-
-    const options: nodemailer.SendMailOptions = {
-      from: this.configService.get<string>('MAIL_FROM'),
-      to: to,
-      subject: subject,
-      text: template,
-      html: html,
-    };
-    try {
-      await transport.sendMail(options);
-      console.log('Correo de bienvenida enviado correctamente');
-    } catch (error) {
-      console.log('Error al enviar el correo de bienvenida', error);
-    }
+    await this.sendEmail(dto, 'welcome');
   }
 
   async sendEmailResetPassword(dto: CreateEmailDto) {
-    const { to, subject, template, html } = dto;
-
-    const transport = this.emailTransporter();
-
-    const options: nodemailer.SendMailOptions = {
-      from: this.configService.get<string>('MAIL_FROM'),
-      to: to,
-      subject: subject,
-      text: template,
-      html: html,
-    };
-    try {
-      await transport.sendMail(options);
-      console.log(
-        'Correo de restablecimiento de contraseña enviado correctamente',
-      );
-    } catch (error) {
-      console.log(
-        'Error al enviar el correo de restablecimiento de contraseña',
-        error,
-      );
-    }
-  }
-
-  async sendEmailSubscription(dto: CreateEmailDto) {
-    const { to, subject, template, html } = dto;
-
-    const transport = this.emailTransporter();
-
-    const options: nodemailer.SendMailOptions = {
-      from: this.configService.get<string>('MAIL_FROM'),
-      to: to,
-      subject: subject,
-      text: template,
-      html: html,
-    };
-    try {
-      await transport.sendMail(options);
-      console.log('Correo de suscripción enviado correctamente');
-    } catch (error) {
-      console.log('Error al enviar el correo de suscripción', error);
-    }
-  }
-
-  async sendEmailCancellation(dto: CreateEmailDto) {
-    const { to, subject, template, html } = dto;
-
-    const transport = this.emailTransporter();
-
-    const options: nodemailer.SendMailOptions = {
-      from: this.configService.get<string>('MAIL_FROM'),
-      to: to,
-      subject: subject,
-      text: template,
-      html: html,
-    };
-    try {
-      await transport.sendMail(options);
-      console.log('Correo de cancelación enviado correctamente');
-    } catch (error) {
-      console.log('Error al enviar el correo de cancelación', error);
-    }
+    await this.sendEmail(dto, 'reset.password');
   }
 
   async sendEmailNotification(dto: CreateEmailDto) {
-    const { to, subject, template, html } = dto;
-
-    const transport = this.emailTransporter();
-
-    const options: nodemailer.SendMailOptions = {
-      from: this.configService.get<string>('MAIL_FROM'),
-      to: to,
-      subject: subject,
-      text: template,
-      html: html,
-    };
-    try {
-      await transport.sendMail(options);
-      console.log('Correo de notificación enviado correctamente');
-    } catch (error) {
-      console.log('Error al enviar el correo de notificación', error);
-    }
+    await this.sendEmail(dto, 'notification');
   }
 
   async sendEmailConfirmSubscription(dto: CreateEmailDto) {
-    const { to, subject, template, html } = dto;
+    await this.sendEmail(dto, 'subscription.confirm');
+  }
 
-    const transport = this.emailTransporter();
+  async sendEmailSubscription(dto: CreateEmailDto) {
+    await this.sendEmail(dto, 'subscription');
+  }
 
-    const options: nodemailer.SendMailOptions = {
-      from: this.configService.get<string>('MAIL_FROM'),
-      to: to,
-      subject: subject,
-      text: template,
-      html: html,
-    };
-    try {
-      await transport.sendMail(options);
-      console.log(
-        'Correo de confirmación de suscripción enviado correctamente',
-      );
-    } catch (error) {
-      console.log(
-        'Error al enviar el correo de confirmación de suscripción',
-        error,
-      );
-    }
+  async sendEmailCancellation(dto: CreateEmailDto) {
+    await this.sendEmail(dto, 'cancel.subscription');
   }
 }
