@@ -39,7 +39,7 @@ export class AuthController {
 
     // await this.emailService.sendEmailWelcome(emailDto); // Pasamos un CreateEmailDto válido
 
-    return await this.authService.signupServices(data);
+    await this.authService.signupServices(data);
   }
 
   @ApiOperation({ summary: 'Inciar session', description: 'Iniciar session' })
