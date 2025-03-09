@@ -63,7 +63,7 @@ export class OrderService {
     const newOrder = await this.orderRepository.save(order);
 
     const now = new Date();
-    let endDate: Date
+    let endDate: Date;
 
     if (orderDto.preferedSub === 'premium') {
       // Si es premium, la fecha de finalización es un mes después
@@ -80,8 +80,8 @@ export class OrderService {
     const orderDetail = this.orderDetailRepository.create({
       price: Number(orderDto.price),
       order: newOrder,
-      startedAt: new Date(),  // La fecha de inicio es el momento actual
-      endsAt: endDate,        // La fecha de fin es la calculada
+      startedAt: new Date(), // La fecha de inicio es el momento actual
+      endsAt: endDate, // La fecha de fin es la calculada
     });
 
     await this.orderDetailRepository.save(orderDetail);
@@ -92,13 +92,15 @@ export class OrderService {
         newOrder.id,
         user.email,
       );
-      const orderId = await this.orderRepository.findOne({where:{id: newOrder.id}})
-      
+      const orderId = await this.orderRepository.findOne({
+        where: { id: newOrder.id },
+      });
+
       return {
         order: orderId,
         initPoint: preference.init_point,
-    };
-      
+      };
+
       // console.log('MercadoPago Preference:', preference);
     } catch (error) {
       throw new HttpException(
@@ -110,17 +112,33 @@ export class OrderService {
   }
 
   async updateStatus(orderId: string, newStatus: string): Promise<string> {
-    const order = await this.orderRepository.findOne({ where: { id: orderId } });
+    const order = await this.orderRepository.findOne({
+      where: { id: orderId },
+    });
 
     if (!order) {
       throw new NotFoundException(`Order with ID ${orderId} not found`);
     }
 
-    order.status =
-      newStatus === status.PAID ? status.PAID : status.NOT_PAID;
+    order.status = newStatus === status.PAID ? status.PAID : status.NOT_PAID;
 
     await this.orderRepository.save(order);
-    console.log('Order status in update:', order.status)
+    console.log('Order status in update:', order.status);
     return `Order with id ${orderId} has been updated to ${order.status}`;
+  }
+
+  async getOrdersExpiringIn24Hours(): Promise<Order[]> {
+    const currentDate = new Date();
+    const beforeDay = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); // 24 horas antes
+
+    //Busca las ordentes cuales terminan en 24 horas
+    const orders = await this.orderRepository
+      .createQueryBuilder('order')
+      .innerJoin('order.details', 'detail')
+      .where('order.Detail.endsat <= : beforeDay', { beforeDay })
+      .andWhere('order.endsAt > :currentDate', { currentDate })
+      .getMany();
+
+    return orders;
   }
 }

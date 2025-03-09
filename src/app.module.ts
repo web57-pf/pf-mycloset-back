@@ -18,6 +18,7 @@ import { AdminModule } from './admin/admin.module';
 import { OrderModule } from './order/order.module';
 import { EmailModule } from './email/email.module';
 import { WeatherModule } from './weather/weather.module';
+import { CronModule } from './cron/cron.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { WeatherModule } from './weather/weather.module';
     WeatherModule,
     AdminModule,
     EmailModule,
+    CronModule,
   ],
   controllers: [],
   providers: [],

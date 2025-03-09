@@ -1,68 +1,82 @@
-import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import * as nodemailer from 'nodemailer';
+import * as path from 'path';
+import * as handlebars from 'handlebars';
+import * as fs from 'fs';
+import { CreateEmailDto } from './dto/create-email.dto';
 
 @Injectable()
 export class EmailService {
-  constructor(private readonly mailerService: MailerService) {}
+  private transporter: nodemailer.Transporter;
 
-  async sendConfirmationEmail(user: string, email: string) {
-    const url = ``;
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Confirm your email',
-      template: './confirm.email',
-      context: {
-        name: user,
-        url,
+  constructor() {
+    this.transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER || 'henrypf057@gmail.com',
+        pass: process.env.EMAIL_PASS || 'nljx irap njdg xrao',
       },
     });
   }
 
-  async sendWelcomeEmail(user: string, email: string) {
-    const url = ``;
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Welcome to our app',
-      template: './welcome',
-      context: {
-        name: user,
-        url,
-      },
-    });
+  private async sendEmail(dto: CreateEmailDto, templateName: string) {
+    const { to, subject, html } = dto;
+
+    // Renderizamos la plantilla Handlebars
+    const templatePath = path.resolve(
+      __dirname,
+      'templates',
+      `${templateName}.hbs`,
+    );
+    const templateSource = fs.readFileSync(templatePath, 'utf-8');
+    const compiledTemplate = handlebars.compile(templateSource);
+    const htmlContent = compiledTemplate(dto); // Renderizamos el HTML con los datos del DTO
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: to.join(','),
+      subject,
+      html: htmlContent, // Aquí usamos el HTML generado por Handlebars
+    };
+
+    try {
+      await this.transporter.sendMail(mailOptions);
+      console.log(
+        `Correo de tipo "${templateName}" enviado a: ${to.join(', ')}`,
+      );
+    } catch (error) {
+      console.error(
+        `Error al enviar el correo de tipo "${templateName}":`,
+        error,
+      );
+    }
   }
 
-  async sendResetPasswordEmail(user: string, email: string) {
-    const url = ``;
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Reset your password',
-      template: './reset.password',
-      context: {
-        name: user,
-        url,
-      },
-    });
+  async sendConfirmationEmail(dto: CreateEmailDto) {
+    await this.sendEmail(dto, 'confirmation');
   }
 
-  async sendSubscriptionEmail(user: string, email: string) {
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Subscription Confirmation',
-      template: './subscription.confirm',
-      context: {
-        name: user,
-      },
-    });
+  async sendEmailWelcome(dto: CreateEmailDto) {
+    await this.sendEmail(dto, 'welcome');
   }
 
-  async sendCancelSubscriptionEmail(user: string, email: string) {
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Subscription Cancellation',
-      template: './cancel.subscription',
-      context: {
-        name: user,
-      },
-    });
+  async sendEmailResetPassword(dto: CreateEmailDto) {
+    await this.sendEmail(dto, 'reset.password');
+  }
+
+  async sendEmailNotification(dto: CreateEmailDto) {
+    await this.sendEmail(dto, 'notification');
+  }
+
+  async sendEmailConfirmSubscription(dto: CreateEmailDto) {
+    await this.sendEmail(dto, 'subscription.confirm');
+  }
+
+  async sendEmailSubscription(dto: CreateEmailDto) {
+    await this.sendEmail(dto, 'subscription');
+  }
+
+  async sendEmailCancellation(dto: CreateEmailDto) {
+    await this.sendEmail(dto, 'cancel.subscription');
   }
 }
