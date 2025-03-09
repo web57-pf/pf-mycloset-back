@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import * as path from 'path';
 import * as handlebars from 'handlebars';
@@ -10,13 +10,22 @@ export class EmailService {
   private transporter: nodemailer.Transporter;
 
   constructor() {
+    if (!process.env.MAIL_USER || !process.env.MAIL_PASSWORD) {
+      console.error(
+        '⚠️ Error: Las variables de entorno MAIL_USER y MAIL_PASSWORD no están definidas.',
+      );
+      throw new InternalServerErrorException(
+        'Configuración de correo no encontrada.',
+      );
+    }
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER || 'henrypf057@gmail.com',
-        pass: process.env.EMAIL_PASS || 'nljx irap njdg xrao',
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD,
       },
     });
+    console.log('✅ Servicio de correo inicializado correctamente.');
   }
 
   private async sendEmail(dto: CreateEmailDto, templateName: string) {

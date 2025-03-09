@@ -10,6 +10,8 @@ export class EmailController {
   @ApiOperation({ summary: 'Enviar email' })
   @Post('send')
   async sendEmail(@Body() dto: CreateEmailDto) {
+    console.log('dto', dto);
+
     switch (dto.type) {
       case 'confirmation':
         await this.emailService.sendConfirmationEmail(dto);
