@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { ApiOperation } from '@nestjs/swagger';
 import { hash } from 'bcrypt';
@@ -25,15 +25,22 @@ export class AdminController {
       summary: 'Crear un usuario admin por default -> email: admin@gmail.com, password: admin'
     })
     @Post()
-    async createAdmin(){
-      const user = new User()
-      user.name = 'admin'
-      user.email = 'admin@gmail.com'
-      const passworHas = await hash('admin',10)
-      user.password = passworHas
-      user.isAdmin = true
-      return await this.userRepository.save(user)
+    async createAdmin() {
+      const userExists = await this.userRepository.findOneBy({ email: 'admin@gmail.com' });
+    
+      if (userExists) {
+        throw new BadRequestException('El usuario admin ya existe');
+      }
+    
+      const user = new User();
+      user.name = 'admin';
+      user.email = 'admin@gmail.com';
+      user.password = await hash('admin', 10);
+      user.isAdmin = true;
+    
+      return await this.userRepository.save(user);
     }
+    
 
     // Todos los usuarios
     @Roles(Role.ADMIN)
