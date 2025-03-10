@@ -110,20 +110,72 @@ export class AdminController {
        return await this.adminService.usersBanned()
     }
 
-    @ApiOperation({ summary: 'Total de ventas' })
-    @Get('total/sales')
-    @Roles(Role.ADMIN)
-    @UseGuards(AuthenticationGuard, RolesGuard)
-    async totalSales() {
-      const result = await this.orderDetailRepository
-        .createQueryBuilder('orderDetail')
-        .select('SUM(orderDetail.price)', 'total')
-        .getRawOne();
+    // @ApiOperation({ summary: 'Total de ventas' })
+    // @Get('total/sales')
+    // @Roles(Role.ADMIN)
+    // @UseGuards(AuthenticationGuard, RolesGuard)
+    // async totalSales() {
+    //   const result = await this.orderDetailRepository
+    //     .createQueryBuilder('orderDetail')
+    //     .select('SUM(orderDetail.price)', 'total')
+    //     .getRawOne();
     
-      // Si no hay resultados, devolver 0 en lugar de null
-      const total = result?.total ?? 0; // Si result.total es null o undefined, devolver 0
+    //   // Si no hay resultados, devolver 0 en lugar de null
+    //   const total = result?.total ?? 0; // Si result.total es null o undefined, devolver 0
     
-      return { total };
-    }
+    //   return { total };
+    // }
 
+    /* Luci */
+  @ApiOperation({ summary: 'Total de ventas' })
+  @Get('total/sales')
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthenticationGuard, RolesGuard)
+  async totalSales() {
+    const results = await this.orderDetailRepository
+      .createQueryBuilder('orderDetail')
+      .select([
+        'SUM(orderDetail.price) as total',
+        'orderDetail.startedAt as date'
+      ])
+      .groupBy('orderDetail.startedAt')
+      .getRawMany();
+
+    const total = results.reduce((sum, record) => sum + Number(record.total), 0);
+    const orders = results.map(record => ({
+      date: record.date,
+      amount: Number(record.total)
+    }));
+
+    return { total, orders };
+  }
+
+  // Métricas: Usuarios registrados por mes (usando createdAt)
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthenticationGuard, RolesGuard)
+  @ApiOperation({ summary: 'Obtener métricas de registros mensuales' })
+  @Get('metrics/registrations')
+  async getMonthlyRegistrations() {
+    const data = await this.adminService.getMonthlyRegistrations();
+    return data;
+  }
+
+  // Métricas: Variación mensual de suscripciones (por tipo y mes)
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthenticationGuard, RolesGuard)
+  @ApiOperation({ summary: 'Obtener variación mensual de suscripciones' })
+  @Get('metrics/subscriptions')
+  async getMonthlySubscriptions() {
+    const data = await this.adminService.getMonthlySubscriptionVariation();
+    return data;
+  }
+
+  @ApiOperation({ summary: 'Seeder: crear 100 usuarios ficticios' })
+  // @Roles(Role.ADMIN)
+  // @UseGuards(AuthenticationGuard, RolesGuard)
+  @Post('seeder/users')
+  async seedUsers() {
+    return await this.adminService.seedUsers();
+  }
 }
+

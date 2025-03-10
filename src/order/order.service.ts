@@ -141,4 +141,88 @@ export class OrderService {
 
     return orders;
   }
+
+  // Luci
+  /**
+   * Seeder: Crea 200 órdenes ficticias para usuarios existentes.
+   */
+  async seedOrders(): Promise<{ message: string }> {
+    // Obtener usuarios existentes
+    const users = await this.userRepository.find();
+    if (users.length === 0) {
+      throw new NotFoundException('No hay usuarios para asignar las órdenes. Primero ejecuta el seeder de usuarios.');
+    }
+
+    // Función para generar una fecha aleatoria dentro del año actual
+    const currentYear = new Date().getFullYear();
+    const startDate = new Date(`${currentYear}-01-01`);
+    const endDate = new Date(`${currentYear}-12-31`);
+    const randomDate = (start: Date, end: Date): Date => {
+      return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    };
+
+    // Función para calcular la fecha de finalización según el tipo de suscripción
+    const computeEndDate = (start: Date, subscriptionType: string): Date => {
+      const end = new Date(start);
+      if (subscriptionType === subsType.free) {
+        end.setDate(end.getDate() + 7); // Ejemplo: periodo de prueba de 7 días
+      } else if (subscriptionType === subsType.premium) {
+        end.setMonth(end.getMonth() + 1);
+      } else if (subscriptionType === subsType.pro) {
+        end.setFullYear(end.getFullYear() + 1);
+      }
+      return end;
+    };
+
+    // Función para generar un precio aleatorio según el tipo de suscripción
+    const randomPriceForSubscription = (subscriptionType: string): number => {
+      if (subscriptionType === subsType.free) {
+        return parseFloat((Math.random() * 50).toFixed(2));
+      } else if (subscriptionType === subsType.premium) {
+        return parseFloat((200 + Math.random() * 200).toFixed(2));
+      } else if (subscriptionType === subsType.pro) {
+        return parseFloat((400 + Math.random() * 200).toFixed(2));
+      }
+      return 0;
+    };
+
+    const subscriptionTypes = [subsType.free, subsType.premium, subsType.pro];
+
+    // Crear 200 órdenes ficticias
+    for (let i = 0; i < 200; i++) {
+      // Seleccionar un usuario aleatorio
+      const randomUser = users[Math.floor(Math.random() * users.length)];
+      // Seleccionar aleatoriamente un tipo de suscripción para la orden (puede ser independiente del subscriptionType del usuario)
+      const randomSubscription = subscriptionTypes[Math.floor(Math.random() * subscriptionTypes.length)];
+      // Generar una fecha aleatoria para la orden
+      const orderDate = randomDate(startDate, endDate);
+
+      // Crear la orden
+      const order = this.orderRepository.create({
+        date: orderDate,
+        user: randomUser,
+        status: status.PENDING,
+        subsType: randomSubscription,
+      });
+      const newOrder = await this.orderRepository.save(order);
+
+      // Calcular la fecha de finalización y el precio
+      const orderDetailStart = orderDate;
+      const orderDetailEnd = computeEndDate(orderDetailStart, randomSubscription);
+      const price = randomPriceForSubscription(randomSubscription);
+
+      // Crear el detalle de la orden
+      const orderDetail = this.orderDetailRepository.create({
+        price,
+        order: newOrder,
+        startedAt: orderDetailStart,
+        endsAt: orderDetailEnd,
+      });
+
+      await this.orderDetailRepository.save(orderDetail);
+    }
+
+    return { message: '200 órdenes ficticias creadas exitosamente.' };
+  }
+
 }

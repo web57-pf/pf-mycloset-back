@@ -71,4 +71,61 @@ export class AdminService {
     })
  }
 
+
+ // Luci
+// Obtiene la cantidad de usuarios registrados por mes (formato YYYY-MM)
+  async getMonthlyRegistrations() {
+    return await this.userRepository
+      .createQueryBuilder("user")
+      .select("TO_CHAR(user.registeredAt, 'YYYY-MM')", "month")
+      .addSelect("COUNT(user.id)", "count")
+      .groupBy("month")
+      .orderBy("month", "ASC")
+      .getRawMany();
+  }
+
+// Obtiene la variación mensual de suscripciones por tipo
+  async getMonthlySubscriptionVariation() {
+    return await this.userRepository
+      .createQueryBuilder("user")
+      .select("TO_CHAR(user.registeredAt, 'YYYY-MM')", "month")
+      .addSelect("user.subscriptionType", "subscriptionType")
+      .addSelect("COUNT(user.id)", "count")
+      .groupBy("month")
+      .addGroupBy("user.subscriptionType")
+      .orderBy("month", "ASC")
+      .getRawMany();
+  }
+
+  /**
+ * Seeder: Crea 100 usuarios ficticios con fechas de registro y tipos de suscripción aleatorios.
+ */
+  async seedUsers(): Promise<{ message: string }> {
+    const subscriptionTypes = [subsType.free, subsType.premium, subsType.pro];
+    const currentYear = new Date().getFullYear();
+    const startDate = new Date(`${currentYear}-01-01`);
+    const endDate = new Date(`${currentYear}-12-31`);
+
+    // Función auxiliar para generar una fecha aleatoria entre dos fechas
+    const randomDate = (start: Date, end: Date): Date => {
+      return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    };
+
+    const usersToCreate = 100;
+    for (let i = 0; i < usersToCreate; i++) {
+      const user = this.userRepository.create({
+        name: `User${i}`,
+        email: `user${i}@example.com`,
+        password: 'password', // En producción deberías encriptarla
+        registeredAt: randomDate(startDate, endDate), // Asignar una fecha aleatoria para el registro
+        isAdmin: false,
+        subscriptionType: subscriptionTypes[Math.floor(Math.random() * subscriptionTypes.length)],
+        isDeleted: false,
+      });
+      await this.userRepository.save(user);
+    }
+    return { message: '100 usuarios ficticios creados exitosamente.' };
+  }
 }
+
+

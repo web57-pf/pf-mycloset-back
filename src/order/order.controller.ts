@@ -58,4 +58,15 @@ export class OrderController {
   ) {
     return await this.updateOrderStatus(orderId, status)
   }
+
+
+  // Luci
+  @ApiOperation({ summary: 'Seeder: crear 200 órdenes ficticias' })
+  // @Roles(Role.ADMIN)
+  // @UseGuards(AuthenticationGuard, RolesGuard)
+  @Post('seeder')
+  async seedOrders() {
+    return await this.orderService.seedOrders();
+  }
 }
+
