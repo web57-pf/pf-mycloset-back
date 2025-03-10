@@ -6,6 +6,8 @@ import {
   Res,
   UseGuards,
   Req,
+  Inject,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignupDTO } from './dto/signup.dto';
@@ -16,12 +18,16 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation } from '@nestjs/swagger';
 import { EmailService } from 'src/email/email.service';
 import { CreateEmailDto } from 'src/email/dto/create-email.dto';
+import { User } from 'src/users/entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly emailService: EmailService,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
   @ApiOperation({
@@ -30,16 +36,19 @@ export class AuthController {
   })
   @Post('signup')
   async signup(@Body() data: SignupDTO) {
-    console.log(data);
-    const emailDto: CreateEmailDto = {
-      email: data.email,
-      subject: 'Bienvenido a nuestra plataforma',
-      html: `<p>Hola ${data.name}, gracias por registrarte. Confirma tu correo electrónico.</p>`,
-      type: 'confirmation',
-    };
-
-    await this.emailService.sendEmailWelcome(emailDto); // Pasamos un CreateEmailDto válido
-    return await this.authService.signupServices(data);
+    const user = await this.userRepository.findOneBy({ email: data.email });
+    if(!user){
+      const emailDto: CreateEmailDto = {
+        email: data.email,
+        subject: 'Bienvenido a nuestra plataforma',
+        html: `<p>Hola ${data.name}, gracias por registrarte. Confirma tu correo electrónico.</p>`,
+        type: 'confirmation',
+      };
+      const email = await this.emailService.sendEmailWelcome(emailDto); 
+      console.log(email);
+      return await this.authService.signupServices(data);
+    }
+    throw new BadRequestException('El correo ya esta registrado');
   }
 
   @ApiOperation({ summary: 'Inciar session', description: 'Iniciar session' })

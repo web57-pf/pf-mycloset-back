@@ -7,6 +7,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { contanst } from './jwt.contanst';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { EmailService } from 'src/email/email.service';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { EmailService } from 'src/email/email.service';
       secret: contanst.secret,
       signOptions: { expiresIn: '1h' },
     }),
+    UsersModule
   ],
   controllers: [AuthController],
   providers: [AuthService, GoogleStrategy, EmailService],
