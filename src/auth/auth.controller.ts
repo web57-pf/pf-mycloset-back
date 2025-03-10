@@ -30,6 +30,7 @@ export class AuthController {
   })
   @Post('signup')
   async signup(@Body() data: SignupDTO) {
+    console.log(data);
     const emailDto: CreateEmailDto = {
       email: data.email,
       subject: 'Bienvenido a nuestra plataforma',
