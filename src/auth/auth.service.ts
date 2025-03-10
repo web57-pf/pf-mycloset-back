@@ -1,4 +1,4 @@
-import { Body, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Body, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -14,11 +14,21 @@ export class AuthService {
     private readonly jwtService: JwtService
   ){}
 
-  async signupServices(data: Partial<User>){
-    const { password } = data
-    const passwordHas = await hash(password, 10)
-    data = {...data, password: passwordHas}
-    return this.userRepository.save(data)
+  async signupServices(data: Partial<User>) {
+    const { email, password } = data;
+    
+    // Verificar si el correo ya existe
+    const existingUser = await this.userRepository.findOneBy({ email });
+    if (existingUser) {
+      throw new BadRequestException('El correo ya está registrado');
+    }
+    
+    // Encriptar la contraseña
+    const passwordHas = await hash(password, 10);
+    data = { ...data, password: passwordHas };
+  
+    // Guardar el nuevo usuario
+    return this.userRepository.save(data);
   }
 
   async signinServices(data: Partial<User>){
