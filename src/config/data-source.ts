@@ -20,7 +20,7 @@ const PostgresDataSourceOptions: DataSourceOptions = {
   synchronize: true,
   logging: false,
   migrations: ['dist/migration/*{.ts,.js}'],
-  dropSchema: false,
+  dropSchema: true,
 };
 
 export const PostgresDataSourceConfig = registerAs(

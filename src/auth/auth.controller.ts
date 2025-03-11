@@ -37,14 +37,14 @@ export class AuthController {
   @Post('signup')
   async signup(@Body() data: SignupDTO) {
     const user = await this.userRepository.findOneBy({ email: data.email });
-    if(!user){
+    if (!user) {
       const emailDto: CreateEmailDto = {
         email: data.email,
         subject: 'Bienvenido a nuestra plataforma',
         html: `<p>Hola ${data.name}, gracias por registrarte. Confirma tu correo electrónico.</p>`,
         type: 'confirmation',
       };
-      const email = await this.emailService.sendEmailWelcome(emailDto); 
+      const email = await this.emailService.sendEmailWelcome(emailDto);
       console.log(email);
       return await this.authService.signupServices(data);
     }
