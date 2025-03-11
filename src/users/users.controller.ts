@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Put, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -10,7 +10,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { hash } from 'bcrypt';
+import * as bcrypt from 'bcrypt'
 
 
 @Controller('users')
@@ -64,6 +64,22 @@ export class UsersController {
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto)
   }
+  
+
+  @Post('password')
+  async updatePassword(@Body() data: { email: string; password: string }) {
+  const user = await this.userRepository.findOneBy({ email: data.email });
+
+  if (!user) {
+    throw new NotFoundException('Email inválido');
+  }
+
+  const hashedPassword = await bcrypt.hash(data.password, 10); // Encriptar la contraseña
+  await this.userRepository.update(user.id, { password: hashedPassword }); // Asegúrate de usar el 'id' o clave primaria
+
+  return { msg: 'Contraseña actualizada correctamente' };
+  }
+
 
   @ApiOperation({
     summary: 'soft deletes one user'
@@ -74,4 +90,7 @@ export class UsersController {
   remove(@Param('id') id:string) {
     return this.usersService.remove(id);
   }
+
+
+
 }
