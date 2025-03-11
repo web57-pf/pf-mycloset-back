@@ -102,7 +102,7 @@ export class AuthController {
     @Req() req,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { user, token } = await this.authService.valideteGoogleUser(req.user);
+    const { newUser, token } = await this.authService.valideteGoogleUser(req.user);
 
     res.cookie('token', token, {
       httpOnly: true,

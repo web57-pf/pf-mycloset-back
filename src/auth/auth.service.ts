@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { hash, compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
+import { subsType } from 'src/users/enum/suscriptionType';
 
 
 @Injectable()
@@ -48,14 +49,25 @@ export class AuthService {
 
   async valideteGoogleUser(googleUser: any){
     let user = await this.userRepository.findOneBy({email: googleUser.email})
-    if(!user){
-      await this.userRepository.save(googleUser)
+    // if(!user){
+    //   await this.userRepository.save(googleUser)
+    // }
+    if(user){
+        throw new BadRequestException('Usuario ya existente!')
     }
 
-    const payload = {user}
+    const newUser = new User()
+    newUser.email = googleUser.email 
+    newUser.name = googleUser.name
+    newUser.isAdmin = false
+    newUser.subscriptionType = subsType.free
+
+    await this.userRepository.save(newUser)
+
+    const payload = {newUser}
     const token = this.jwtService.sign(payload)
 
-    return { user, token }
+    return { newUser, token }
   }
 }
 
