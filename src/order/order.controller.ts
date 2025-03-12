@@ -8,6 +8,7 @@ import {
   Put,
   UseGuards,
   HttpException,
+  Delete,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -59,6 +60,14 @@ export class OrderController {
     return await this.updateOrderStatus(orderId, status)
   }
 
+  @ApiOperation({summary: 'Eliminar orden por id'})
+  @Roles(Role.ADMIN, Role.USER)
+  @UseGuards(AuthenticationGuard, RolesGuard)
+  @Delete(':id')
+  async deleteOrder (@Param('id', ParseUUIDPipe) id: string){
+    const order = await this.orderService.deleteOrder(id)
+    return order
+  }
 
   // Luci
   @ApiOperation({ summary: 'Seeder: crear 200 órdenes ficticias' })

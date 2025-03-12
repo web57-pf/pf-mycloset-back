@@ -127,6 +127,16 @@ export class OrderService {
     return `Order with id ${orderId} has been updated to ${order.status}`;
   }
 
+  async deleteOrder(id: string): Promise<string>{
+    const order = await this.orderRepository.findOne({where: {id: id}})
+    if(!order){
+      throw new NotFoundException(`Order with id: ${id} not found`)
+    }
+    order.status = status.DELETED
+    await this.orderRepository.save(order)
+    return `Order with id: ${id} has been deleted`
+  }
+
   async getOrdersExpiringIn24Hours(): Promise<Order[]> {
     const currentDate = new Date();
     const beforeDay = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); // 24 horas antes

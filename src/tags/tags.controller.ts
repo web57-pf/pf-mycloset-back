@@ -76,7 +76,7 @@ export class TagsController {
             }
         }
     })
-    @Roles(Role.ADMIN)
+    @Roles(Role.ADMIN, Role.USER)
     @UseGuards(AuthenticationGuard, RolesGuard)
     @Put(':id')
     async update(@Param('id') id: string,
@@ -87,7 +87,7 @@ export class TagsController {
     @ApiOperation({
         summary: 'Removes one tag by id'
     })
-    @Roles(Role.ADMIN)
+    @Roles(Role.ADMIN, Role.USER)
     @UseGuards(AuthenticationGuard, RolesGuard)
     @Delete(':id')
     async remove(@Param('id') id: string){
