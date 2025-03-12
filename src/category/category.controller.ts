@@ -88,6 +88,7 @@ export class CategoryController {
   @UseGuards(AuthenticationGuard, RolesGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return await this.categoryService.remove(id);
+    await this.categoryService.remove(id);
+    return `Category with id: ${id} has been removed`
   }
 }

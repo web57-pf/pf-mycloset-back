@@ -106,6 +106,7 @@ export class ClothesService {
 
 
   async getFilteredClothes(
+    userId: string,
     categoryId?: string,
     tagIds?: string[],
     favorite?: boolean,
@@ -114,7 +115,8 @@ export class ClothesService {
       .createQueryBuilder('clothes')
       .leftJoinAndSelect('clothes.category', 'category')
       .leftJoinAndSelect('clothes.tags', 'tags')
-      .where('clothes.isDeleted = :isDeleted', { isDeleted: false});
+      .where('clothes.isDeleted = :isDeleted', { isDeleted: false})
+      .andWhere('clothes.userId = :userId', {userId});
 
     if (categoryId) {
       query.andWhere('category.id = :categoryId', { categoryId });

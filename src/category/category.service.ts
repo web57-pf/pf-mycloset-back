@@ -27,11 +27,11 @@ export class CategoryService {
   }
 
   async findAll() {
-    return await this.categoryRepository.find()
+    return await this.categoryRepository.find({where: {isDeleted: false}})
   }
 
   async findOne(id: string) {
-    const category = await this.categoryRepository.findOne({where: {id: id}})
+    const category = await this.categoryRepository.findOne({where: {id: id, isDeleted: false}})
     if (!category){
       throw new NotFoundException(`Category with id: ${id} not found`)
     }

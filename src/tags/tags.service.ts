@@ -25,10 +25,10 @@ export class TagsService {
         return await this.tagsRepository.save(createTagsDto) 
     }
     async findAll() {
-        return await this.tagsRepository.find()
+        return await this.tagsRepository.find({where: {isDeleted: false}})
     }
     async findOne(id) {
-        return await this.tagsRepository.findOne(id)
+        return await this.tagsRepository.findOne({where: {id: id, isDeleted: false}})
     }
     async update(id, updateTagsDto: UpdateTagsDto) {
         const updatedTags = await this.tagsRepository.findOne({where: {id: id}})
@@ -44,6 +44,7 @@ export class TagsService {
             throw new NotFoundException(`Tag with id ${id} not found`)
           }
         tag.isDeleted = true
-        return await this.tagsRepository.save(tag)
+        await this.tagsRepository.save(tag)
+        return `Tag with id: ${id} has been removed`
     }
 }

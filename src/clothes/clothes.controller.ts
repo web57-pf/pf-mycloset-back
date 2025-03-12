@@ -92,15 +92,15 @@ export class ClothesController {
 
   @Get('filter/get')
   async filterClothes(
+    @Req() req,
     @Query('category') categoryId?: string,
     @Query('tags') tags?: string,
-    @Query('favorite') favorite?: boolean
+    @Query('favorite') favorite?: boolean,
   ){
-    console.log(categoryId)
-    console.log(tags)
+    const userId = req.user.id
     const tagIds = tags ? tags.split(',') : undefined
     const isFavorite = favorite !== undefined ? favorite === true : undefined
 
-    return await this.clothesService.getFilteredClothes(categoryId, tagIds, isFavorite)
+    return await this.clothesService.getFilteredClothes(userId, categoryId, tagIds, isFavorite)
   }
 }
