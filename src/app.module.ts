@@ -6,7 +6,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostgresDataSourceConfig } from './config/data-source';
 import { ClothesModule } from './clothes/clothes.module';
-import { OrderDetailModule } from './order_detail/order_detail.module';
 // import { FileUploadModule } from './file-upload/file-upload.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CombinationsModule } from './combinations/combinations.module';
@@ -39,7 +38,6 @@ import { CronModule } from './cron/cron.module';
     // FileUploadModule,
     AuthModule,
     ClothesModule,
-    OrderDetailModule,
     MercadopagoModule,
     CombinationsModule,
     TagsModule,
