@@ -22,18 +22,6 @@ export class AdminController {
   ) {}
 
 
-    // Conteo total de usuarios
-    @Roles(Role.ADMIN)
-    @UseGuards(AuthenticationGuard, RolesGuard)
-    @ApiOperation({
-      summary: 'Obtener conteo total de usuarios'
-    })
-    @Get()
-    async getUsersCount() {
-      const count = await this.userRepository.count();
-      return { count };
-    }
-
    // Crear un usuario admin por default 
     @ApiOperation({
       summary: 'Crear un usuario admin por default -> email: admin@gmail.com, password: admin'
@@ -55,17 +43,6 @@ export class AdminController {
       return await this.userRepository.save(user);
     }
     
-
-    // Todos los usuarios
-    @Roles(Role.ADMIN)
-    @UseGuards(AuthenticationGuard, RolesGuard)
-    @ApiOperation({
-        summary: 'Obtener todos los usuarios'
-    })
-    @Get()
-    async findAll() {
-        return await this.adminService.findAll()
-    }
 
     // Un usuario por id
     @Roles(Role.ADMIN)
@@ -193,5 +170,29 @@ export class AdminController {
   async seedUsers() {
     return await this.adminService.seedUsers();
   }
+
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthenticationGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Obtener conteo total de usuarios'
+  })
+  @Get()
+  async getUsersCount() {
+    const count = await this.userRepository.count();
+    return { count };
+  }
+
+  // Obtener el total de usuarios registrados
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthenticationGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Obtener el total de usuarios registrados'
+  })
+  @Get('total')
+  async findAll() {
+    return await this.userRepository.find();
+  }
+
 }
+
 
