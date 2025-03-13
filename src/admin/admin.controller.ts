@@ -95,6 +95,14 @@ export class AdminController {
       return this.adminService.findPremiumUsers();
     }
 
+    @ApiOperation({ summary: 'Obtener usuarios con suscripción pro' })
+    @Roles(Role.ADMIN)
+    @UseGuards(AuthenticationGuard, RolesGuard)
+    @Get('subscription/pro')
+    async getProUsers(): Promise<User[]> {
+      return this.adminService.findProUsers();
+    }
+
     @Get('banned/users')
     @Roles(Role.ADMIN)
     @UseGuards(AuthenticationGuard, RolesGuard)

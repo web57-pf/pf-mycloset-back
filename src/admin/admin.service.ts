@@ -63,6 +63,14 @@ export class AdminService {
     })
   }
 
+  async findProUsers(){
+    return await this.userRepository.find({
+      where: {
+        subscriptionType: subsType.pro
+      }
+    })
+  }
+
  async usersBanned(){
     return await this.userRepository.find({
       where:{
