@@ -21,6 +21,19 @@ export class AdminController {
     @InjectRepository(OrderDetail) private readonly orderDetailRepository: Repository<OrderDetail>
   ) {}
 
+
+    // Conteo total de usuarios
+    @Roles(Role.ADMIN)
+    @UseGuards(AuthenticationGuard, RolesGuard)
+    @ApiOperation({
+      summary: 'Obtener conteo total de usuarios'
+    })
+    @Get()
+    async getUsersCount() {
+      const count = await this.userRepository.count();
+      return { count };
+    }
+
    // Crear un usuario admin por default 
     @ApiOperation({
       summary: 'Crear un usuario admin por default -> email: admin@gmail.com, password: admin'
