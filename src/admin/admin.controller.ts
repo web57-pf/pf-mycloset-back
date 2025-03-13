@@ -11,6 +11,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { subsType } from 'src/users/enum/suscriptionType';
 import { OrderDetail } from 'src/order_detail/entities/order_detail.entity';
+import { updateDTO } from 'src/auth/dto/updated.dto';
 
 @Controller('admin')
 export class AdminController {
@@ -71,7 +72,9 @@ export class AdminController {
       summary: 'Actualizar un usuario'
     })
     @Put(':id')
-    async updateUser(@Body() data: any, @Param('id') id: string) {
+    async updateUser(
+      @Body() data: updateDTO, 
+      @Param('id') id: string) {
       return await this.adminService.updateUser(id, data)
     }
 
