@@ -46,8 +46,8 @@ export class TagsController {
     @ApiOperation({
         summary: 'Get all tags'
     })
-    @Roles(Role.USER, Role.ADMIN)
-    @UseGuards(AuthenticationGuard, RolesGuard)
+    // @Roles(Role.USER, Role.ADMIN)
+    // @UseGuards(AuthenticationGuard, RolesGuard)
     @Get()
     async findAll(){
         return await this.tagsService.findAll()
