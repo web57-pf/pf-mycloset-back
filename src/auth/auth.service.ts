@@ -47,48 +47,48 @@ export class AuthService {
     return { token, userWhitOutPassword };
   }
 
-  // async valideteGoogleUser(googleUser: any){
-  //   let user = await this.userRepository.findOneBy({email: googleUser.email})
-  //   // if(!user){
-  //   //   await this.userRepository.save(googleUser)
-  //   // }
-  //   const payload = {user}
-  //   const token = this.jwtService.sign(payload)
-
-  //   return { newUser, token }
-  // }
-
-  async valideteGoogleUser(googleUser: any) {
-    let user = await this.userRepository.findOneBy({ email: googleUser.email });
-  
-    if (!user) {
-      // Si el usuario no existe, creamos uno nuevo con valores predeterminados
-      user = new User();
-      user.email = googleUser.email;
-      user.name = googleUser.name || 'Usuario de Google';
-      user.isAdmin = false;
-      user.subscriptionType = subsType.free; // Valor predeterminado de suscripción
-    } else {
-      // Si el usuario ya existe, actualizamos su suscripción si es necesario
-      if (googleUser.subscriptionType && googleUser.subscriptionType !== user.subscriptionType) {
-        user.subscriptionType = googleUser.subscriptionType; // Actualizamos el tipo de suscripción
-      }
+  async valideteGoogleUser(googleUser: any){
+    let user = await this.userRepository.findOneBy({email: googleUser.email})
+    if(!user){
+      await this.userRepository.save(googleUser)
     }
+    const payload = {user}
+    const token = this.jwtService.sign(payload)
 
-    await this.userRepository.save(user);
-  
-    // Generamos el token
-    const payload = {
-      id: user.id,
-      email: user.email,
-      subscriptionType: user.subscriptionType,
-      roles: user.isAdmin,
-    };
-  
-    const token = this.jwtService.sign(payload);
-  
-    return { user, token };
+    return { user, token }
   }
+
+  // async valideteGoogleUser(googleUser: any) {
+  //   let user = await this.userRepository.findOneBy({ email: googleUser.email });
+  
+  //   if (!user) {
+  //     // Si el usuario no existe, creamos uno nuevo con valores predeterminados
+  //     user = new User();
+  //     user.email = googleUser.email;
+  //     user.name = googleUser.name || 'Usuario de Google';
+  //     user.isAdmin = false;
+  //     user.subscriptionType = subsType.free; // Valor predeterminado de suscripción
+  //   } else {
+  //     // Si el usuario ya existe, actualizamos su suscripción si es necesario
+  //     if (googleUser.subscriptionType && googleUser.subscriptionType !== user.subscriptionType) {
+  //       user.subscriptionType = googleUser.subscriptionType; // Actualizamos el tipo de suscripción
+  //     }
+  //   }
+
+  //   await this.userRepository.save(user);
+  
+  //   // Generamos el token
+  //   const payload = {
+  //     id: user.id,
+  //     email: user.email,
+  //     subscriptionType: user.subscriptionType,
+  //     roles: user.isAdmin,
+  //   };
+  
+  //   const token = this.jwtService.sign(payload);
+  
+  //   return { user, token };
+  // }
   
 }
 
