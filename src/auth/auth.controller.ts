@@ -77,7 +77,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Validacion de session', description: '...' })
   @Post('session')
-  @UseGuards(AuthenticationGuard)
+  @UseGuards(AuthGuard('google'),AuthenticationGuard)
   UserInfo(@Req() req) {
     return req.user;
   }
